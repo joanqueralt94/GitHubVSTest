@@ -138,3 +138,8 @@ void AVisualStudioTestCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+void AVisualStudioTestCharacter::SpawnObject()
+{
+	const bool test = false;
+}
