@@ -139,14 +139,15 @@ void AVisualStudioTestCharacter::MoveRight(float Value)
 }
 
 
-void AVisualStudioTestCharacter::SpawnObject(FVector Loc, FRotator Rot)
+void AVisualStudioTestCharacter::SpawnObject()
 {
 	FVector Location;
 	FRotator Rotation; 
 
-	GetController()->GetPlayerViewPoint(Location, Rotation);
+	Location = GetActorLocation() + GetActorForwardVector()*SpawnDistance;
+	Rotation = GetActorRotation();
 
 	FActorSpawnParameters SpawnParams;
-	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, Loc, Rot, SpawnParams);
+	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, Location, Rotation, SpawnParams);
 
 }

@@ -74,8 +74,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawn;
 
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	int SpawnDistance;
 
 	UFUNCTION(BlueprintCallable)
-		void SpawnObject(FVector Loc, FRotator Rot);
+	void SpawnObject();
 };
 

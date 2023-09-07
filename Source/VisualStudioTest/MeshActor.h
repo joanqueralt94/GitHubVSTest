@@ -26,4 +26,16 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (ExposeFunctionCategories = "Mesh,Rendering,Physics,Components|StaticMesh", AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* StaticMeshComponent;
+
+public:
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UBoxComponent* CollisionBox;
+
+	UFUNCTION()
+	void OnOverlapBegin(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+	void OnOverlapEnd(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 };
