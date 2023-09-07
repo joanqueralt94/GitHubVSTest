@@ -13,12 +13,12 @@ AMeshActor::AMeshActor()
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponentName");
 
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
-	CollisionBox->SetGenerateOverlapEvents(true);
-	CollisionBox->SetBoxExtent(FVector(32.f, 32.f, 32.f));
-	CollisionBox->SetCollisionProfileName("Trigger");
-	RootComponent = CollisionBox;
-	
+	//CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	//CollisionBox->SetGenerateOverlapEvents(true);
+	//CollisionBox->SetBoxExtent(FVector(32.f, 32.f, 32.f));
+	//CollisionBox->SetCollisionProfileName("Trigger");
+	//RootComponent = CollisionBox;
+	//
 	//CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AMeshActor::OnOverlapBegin);
 	//CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AMeshActor::OnOverlapEnd);
 
