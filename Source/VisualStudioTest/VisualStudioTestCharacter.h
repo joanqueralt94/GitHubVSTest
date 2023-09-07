@@ -70,8 +70,12 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 public:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+	TSubclassOf<AActor> ActorToSpawn;
+
 
 	UFUNCTION(BlueprintCallable)
-		void SpawnObject();
+		void SpawnObject(FVector Loc, FRotator Rot);
 };
 

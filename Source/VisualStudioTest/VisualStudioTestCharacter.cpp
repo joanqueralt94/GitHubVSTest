@@ -76,7 +76,6 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AVisualStudioTestCharacter::OnResetVR);
 }
 
-
 void AVisualStudioTestCharacter::OnResetVR()
 {
 	// If VisualStudioTest is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in VisualStudioTest.Build.cs is not automatically propagated
@@ -139,7 +138,15 @@ void AVisualStudioTestCharacter::MoveRight(float Value)
 	}
 }
 
-void AVisualStudioTestCharacter::SpawnObject()
+
+void AVisualStudioTestCharacter::SpawnObject(FVector Loc, FRotator Rot)
 {
-	const bool test = false;
+	FVector Location;
+	FRotator Rotation; 
+
+	GetController()->GetPlayerViewPoint(Location, Rotation);
+
+	FActorSpawnParameters SpawnParams;
+	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, Loc, Rot, SpawnParams);
+
 }
