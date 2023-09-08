@@ -21,7 +21,8 @@ AMeshActor::AMeshActor()
 	CollisionBox->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	CollisionBox->SetGenerateOverlapEvents(true);
 	CollisionBox->SetBoxExtent(FVector(32.f, 32.f, 32.f));
-	CollisionBox->SetCollisionProfileName("OverlapOnlyPawn");
+	CollisionBox->SetCollisionProfileName("OverlapAll");
+	CollisionBox->SetHiddenInGame(false);
 	
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AMeshActor::OnOverlapBegin);
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AMeshActor::OnOverlapEnd);
@@ -44,14 +45,11 @@ void AMeshActor::Tick(float DeltaTime)
 
 void AMeshActor::OnOverlapBegin(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//TO DO: Obtain player actor and check OtherActor is ThirdPersonPlayer
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Overlap Begin Function Called");
 }
 
 void AMeshActor::OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	//TO DO: Obtain player actor and check OtherActor is ThirdPersonPlayer
-
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Overlap End Function Called");
 }
 
