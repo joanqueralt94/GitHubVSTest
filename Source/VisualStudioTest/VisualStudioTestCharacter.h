@@ -79,5 +79,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SpawnObject();
+
+	UFUNCTION(BlueprintCallable)
+	void AtractObject();
 };
 

@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Engine/Engine.h"
+#include "kismet/gameplaystatics.h"
 
 // Sets default values
 AMeshActor::AMeshActor()
@@ -32,6 +33,8 @@ AMeshActor::AMeshActor()
 void AMeshActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
 }
 
@@ -44,15 +47,18 @@ void AMeshActor::Tick(float DeltaTime)
 
 void AMeshActor::OnOverlapBegin(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//TO DO: Obtain player actor and check OtherActor is ThirdPersonPlayer
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Overlap Begin Function Called");
+	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Overlap Begin Function Called");
+	}
 }
 
 void AMeshActor::OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	//TO DO: Obtain player actor and check OtherActor is ThirdPersonPlayer
-
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Overlap End Function Called");
+	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Overlap End Function Called");
+	}
 }
 
 

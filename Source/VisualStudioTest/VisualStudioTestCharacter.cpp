@@ -8,6 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Engine/Engine.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -150,4 +152,9 @@ void AVisualStudioTestCharacter::SpawnObject()
 	FActorSpawnParameters SpawnParams;
 	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, Location, Rotation, SpawnParams);
 
+}
+
+void AVisualStudioTestCharacter::AtractObject()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Atracting Object");
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "VisualStudioTestCharacter.h"
 #include "GameFramework/Actor.h"
 #include "MeshActor.generated.h"
 
@@ -31,6 +32,9 @@ private:
 	class UStaticMeshComponent* StaticMeshComponent;
 
 public:
+
+	AVisualStudioTestCharacter* ThirdPersonCharacter;
+
 	UPROPERTY()
 	USceneComponent* DefaultRootComponent;
 	
