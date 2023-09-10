@@ -9,7 +9,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/Engine.h"
-
+#include "DrawDebugHelpers.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -154,7 +154,35 @@ void AVisualStudioTestCharacter::SpawnObject()
 
 }
 
+void AVisualStudioTestCharacter::RayCast()
+{
+	FHitResult OutHit;
+
+	FVector Start = FollowCamera->GetComponentLocation();
+	FVector ForwardVector = FollowCamera->GetForwardVector();
+
+	Start = Start + (ForwardVector * CameraBoom->TargetArmLength);
+
+	FVector End = Start + (ForwardVector * RaycastDistance);
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this->GetOwner());
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 1, 0, 1);
+
+	bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
+
+	if (IsHit)
+	{
+		if (OutHit.GetActor()->ActorHasTag(TEXT("Attractable")))
+		{
+w			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Ray casted the actor" + OutHit.GetActor()->GetName());
+		}
+	}
+
+}
+
 void AVisualStudioTestCharacter::AtractObject()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Atracting Object");
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Attracting Object");
+	RayCast();
 }

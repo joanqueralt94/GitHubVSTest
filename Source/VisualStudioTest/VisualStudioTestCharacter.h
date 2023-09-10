@@ -82,5 +82,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AtractObject();
+
+	UPROPERTY(EditAnywhere, Category = "Raycast")
+	float RaycastDistance = 5000.0f;
+
+	void RayCast();
 };
 

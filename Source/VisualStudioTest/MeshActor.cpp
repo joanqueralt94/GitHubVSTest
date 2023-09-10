@@ -60,5 +60,3 @@ void AMeshActor::OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Overlap End Function Called");
 	}
 }
-
-
