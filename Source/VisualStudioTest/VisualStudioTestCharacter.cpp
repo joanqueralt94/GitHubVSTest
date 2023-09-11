@@ -179,6 +179,7 @@ void AVisualStudioTestCharacter::RayCast()
 			IsAttracting = true;
 		}
 	}
+	else IsAttracting = false;
 
 }
 
