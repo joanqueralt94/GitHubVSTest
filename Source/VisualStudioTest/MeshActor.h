@@ -47,4 +47,7 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UPROPERTY(EditAnywhere, Category = "RayCast")
+	float AttractSpeed = 20.f;
+
 };

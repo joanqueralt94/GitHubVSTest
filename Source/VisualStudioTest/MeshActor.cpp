@@ -43,6 +43,14 @@ void AMeshActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (ThirdPersonCharacter->IsAttracting)
+	{
+		FVector AttractVector = ThirdPersonCharacter->GetActorLocation() - GetActorLocation();
+		AttractVector = AttractVector.GetSafeNormal();
+		FVector NewVector = GetActorLocation() + AttractVector * AttractSpeed * DeltaTime;
+		SetActorLocation(NewVector);
+	}
+
 }
 
 void AMeshActor::OnOverlapBegin(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -50,6 +58,7 @@ void AMeshActor::OnOverlapBegin(UPrimitiveComponent* HitComp, AActor* OtherActor
 	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Overlap Begin Function Called");
+		this->Destroy();
 	}
 }
 
@@ -58,5 +67,6 @@ void AMeshActor::OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Overlap End Function Called");
+		this->Destroy();
 	}
 }

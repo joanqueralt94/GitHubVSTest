@@ -87,5 +87,7 @@ public:
 	float RaycastDistance = 5000.0f;
 
 	void RayCast();
+
+	bool IsAttracting = false;
 };
 

@@ -176,6 +176,7 @@ void AVisualStudioTestCharacter::RayCast()
 		if (OutHit.GetActor()->ActorHasTag(TEXT("Attractable")))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Ray casted the actor" + OutHit.GetActor()->GetName());
+			IsAttracting = true;
 		}
 	}
 
