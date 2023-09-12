@@ -83,11 +83,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AtractObject();
 
+	UFUNCTION(BlueprintCallable)
+	void StopAttracting();
+
 	UPROPERTY(EditAnywhere, Category = "Raycast")
 	float RaycastDistance = 5000.0f;
 
 	void RayCast();
 
-	bool IsAttracting = false;
+	//bool bDoRaycast flag per controlar que el player faci o no el raycast
+
 };
 

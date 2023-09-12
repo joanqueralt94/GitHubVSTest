@@ -43,7 +43,7 @@ void AMeshActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (ThirdPersonCharacter->IsAttracting)
+	if (IsAttracting)
 	{
 		FVector AttractVector = ThirdPersonCharacter->GetActorLocation() - GetActorLocation();
 		AttractVector = AttractVector.GetSafeNormal();

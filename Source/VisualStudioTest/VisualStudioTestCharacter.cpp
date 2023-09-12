@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
+#include "MeshActor.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -154,37 +155,53 @@ void AVisualStudioTestCharacter::SpawnObject()
 
 }
 
+void AVisualStudioTestCharacter::StopAttracting()
+{
+
+}
+
 void AVisualStudioTestCharacter::RayCast()
 {
 	FHitResult OutHit;
 
 	FVector Start = FollowCamera->GetComponentLocation();
-	FVector ForwardVector = FollowCamera->GetForwardVector();
+	const FVector ForwardVector = FollowCamera->GetForwardVector();
 
 	Start = Start + (ForwardVector * CameraBoom->TargetArmLength);
 
-	FVector End = Start + (ForwardVector * RaycastDistance);
+	const FVector End = Start + (ForwardVector * RaycastDistance);
 	FCollisionQueryParams CollisionParams;
-	CollisionParams.AddIgnoredActor(this->GetOwner());
+	CollisionParams.AddIgnoredActor(GetOwner());
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 1, 0, 1);
+	const UWorld* MyWorld = GetWorld();
+	check(MyWorld != nullptr);
 
-	bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
+	static constexpr bool bPersistentLines = false;
+	static constexpr float LifeTime = 1.f;
+	static constexpr uint8 DepthPriority = 0;
+	static constexpr float Thickness = 1.f;
 
-	if (IsHit)
+	DrawDebugLine(MyWorld, Start, End, FColor::Yellow, bPersistentLines, LifeTime, DepthPriority, Thickness);
+
+	static constexpr ECollisionChannel TraceChannel = ECC_Visibility;
+
+	const bool bIsHit = MyWorld->LineTraceSingleByChannel(OutHit, Start, End, TraceChannel, CollisionParams);
+
+	if (bIsHit)
 	{
-		if (OutHit.GetActor()->ActorHasTag(TEXT("Attractable")))
+		AActor* ActorHit = OutHit.GetActor();
+		if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Ray casted the actor" + OutHit.GetActor()->GetName());
-			IsAttracting = true;
+			if (AMeshActor* MeshActorHit = Cast<AMeshActor>(ActorHit))
+			{
+				MeshActorHit->IsAttracting = true;
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Ray casted the actor" + ActorHit->GetName());
+			}
 		}
 	}
-	else IsAttracting = false;
-
 }
 
 void AVisualStudioTestCharacter::AtractObject()
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Attracting Object");
 	RayCast();
 }
