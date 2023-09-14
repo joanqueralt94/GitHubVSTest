@@ -31,8 +31,6 @@ AMeshActor::AMeshActor()
 	AttractableComp = CreateDefaultSubobject<UAttractableComponent>(TEXT("AttractableComponent"));
 	AttractableComp->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
-
-
 }
 
 // Called when the game starts or when spawned
@@ -52,7 +50,12 @@ void AMeshActor::Tick(float DeltaTime)
 	if (AttractableComp->bIsAttracting)
 	{
 		AActor* BaseActor = GetOwner();
-		AttractableComp->Attraction(BaseActor, ThirdPersonCharacter, DeltaTime);
+		if (BaseActor != nullptr)
+		{
+			AttractableComp->Attraction(BaseActor, ThirdPersonCharacter, DeltaTime);
+		}
+		else GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "M'he fumat 4 porros");
+
 	}
 
 }
