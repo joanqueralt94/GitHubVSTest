@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Engine/Engine.h"
 #include "kismet/gameplaystatics.h"
+#include "AttractableComponent.h"
 
 // Sets default values
 AMeshActor::AMeshActor()
@@ -27,6 +28,11 @@ AMeshActor::AMeshActor()
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AMeshActor::OnOverlapBegin);
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AMeshActor::OnOverlapEnd);
 
+	AttractableComp = CreateDefaultSubobject<UAttractableComponent>(TEXT("AttractableComponent"));
+	AttractableComp->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+
+
 }
 
 // Called when the game starts or when spawned
@@ -43,12 +49,10 @@ void AMeshActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (IsAttracting)
+	if (AttractableComp->bIsAttracting)
 	{
-		FVector AttractVector = ThirdPersonCharacter->GetActorLocation() - GetActorLocation();
-		AttractVector = AttractVector.GetSafeNormal();
-		FVector NewVector = GetActorLocation() + AttractVector * AttractSpeed * DeltaTime;
-		SetActorLocation(NewVector);
+		AActor* BaseActor = GetOwner();
+		AttractableComp->Attraction(BaseActor, ThirdPersonCharacter, DeltaTime);
 	}
 
 }

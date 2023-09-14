@@ -41,8 +41,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UBoxComponent* CollisionBox;
 
-	//Create new component that inherits from UActorComponent, add it to the MeshActor and encapsulate all the attachment logic in there.
-	//class UAttractableComponent -> llògica de atracció + discriminació
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UAttractableComponent* AttractableComp;
 
 	//Array de pointers a Actors que li faig el raycast
 
@@ -52,8 +52,4 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UPROPERTY(EditAnywhere, Category = "RayCast")
-	float AttractSpeed = 20.f;
-
-	bool IsAttracting = false;
 };

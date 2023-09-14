@@ -11,6 +11,7 @@
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
 #include "MeshActor.h"
+#include "AttractableComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -59,6 +60,12 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAction("Attract", IE_Pressed, this, &AVisualStudioTestCharacter::StartAttracting);
+	PlayerInputComponent->BindAction("Attract", IE_Released, this, &AVisualStudioTestCharacter::StopAttracting);
+
+	PlayerInputComponent->BindAction("Spawn", IE_Pressed, this, &AVisualStudioTestCharacter::SpawnObject);
+
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AVisualStudioTestCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AVisualStudioTestCharacter::MoveRight);
@@ -155,11 +162,6 @@ void AVisualStudioTestCharacter::SpawnObject()
 
 }
 
-void AVisualStudioTestCharacter::StopAttracting()
-{
-
-}
-
 void AVisualStudioTestCharacter::RayCast()
 {
 	FHitResult OutHit;
@@ -194,14 +196,24 @@ void AVisualStudioTestCharacter::RayCast()
 		{
 			if (AMeshActor* MeshActorHit = Cast<AMeshActor>(ActorHit))
 			{
-				MeshActorHit->IsAttracting = true;
+				MeshActorHit->AttractableComp->bIsAttracting = true;
 				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Ray casted the actor" + ActorHit->GetName());
 			}
 		}
 	}
 }
 
-void AVisualStudioTestCharacter::AtractObject()
+void AVisualStudioTestCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void AVisualStudioTestCharacter::StartAttracting()
 {
 	RayCast();
+}
+
+void AVisualStudioTestCharacter::StopAttracting()
+{
+
 }

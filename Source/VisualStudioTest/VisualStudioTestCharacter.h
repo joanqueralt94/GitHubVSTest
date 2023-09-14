@@ -81,7 +81,7 @@ public:
 	void SpawnObject();
 
 	UFUNCTION(BlueprintCallable)
-	void AtractObject();
+	void StartAttracting();
 
 	UFUNCTION(BlueprintCallable)
 	void StopAttracting();
@@ -92,6 +92,9 @@ public:
 	void RayCast();
 
 	//bool bDoRaycast flag per controlar que el player faci o no el raycast
+	bool bDoRaycast = false;
+
+	virtual void Tick(float DeltaTime) override;
 
 };
 
