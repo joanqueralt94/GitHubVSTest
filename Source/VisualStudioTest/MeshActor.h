@@ -42,7 +42,7 @@ public:
 	class UBoxComponent* CollisionBox;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	class UAttractableComponent* AttractableComp;
+	class UAttractableActorComponent* AttractableActorComp;
 
 	//Array de pointers a Actors que li faig el raycast
 

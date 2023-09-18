@@ -12,6 +12,7 @@
 #include "DrawDebugHelpers.h"
 #include "MeshActor.h"
 #include "AttractableComponent.h"
+#include "AttractableActorComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -164,7 +165,7 @@ void AVisualStudioTestCharacter::SpawnObject()
 
 void AVisualStudioTestCharacter::RayCast()
 {
-	FHitResult OutHit;
+	TArray<FHitResult> m_OutHitArray;
 
 	FVector Start = FollowCamera->GetComponentLocation();
 	const FVector ForwardVector = FollowCamera->GetForwardVector();
@@ -187,25 +188,46 @@ void AVisualStudioTestCharacter::RayCast()
 
 	static constexpr ECollisionChannel TraceChannel = ECC_Visibility;
 
-	const bool bIsHit = MyWorld->LineTraceSingleByChannel(OutHit, Start, End, TraceChannel, CollisionParams);
+	//const bool bIsHit = MyWorld->LineTraceSingleByChannel(OutHit, Start, End, TraceChannel, CollisionParams);
 
-	if (bIsHit)
+	const bool bIsHitArray = MyWorld->LineTraceMultiByChannel(m_OutHitArray, Start, End, TraceChannel, CollisionParams);
+
+
+	if (bIsHitArray)
 	{
-		AActor* ActorHit = OutHit.GetActor();
-		if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
+		for (FHitResult& HitResult : m_OutHitArray)
 		{
-			if (AMeshActor* MeshActorHit = Cast<AMeshActor>(ActorHit))
+			AActor* ActorHit = HitResult.GetActor();
+			if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
 			{
-				MeshActorHit->AttractableComp->bIsAttracting = true;
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Ray casted the actor" + ActorHit->GetName());
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Actor Hit: " + ActorHit->GetName());
+
+				if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
+				{
+					m_AttractedActors.AddUnique(ActorHit);
+					AttractableComponent->StartAttracting(this);
+				}
+
 			}
 		}
+		
 	}
 }
 
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+UAttractableActorComponent* AVisualStudioTestCharacter::GetAttractableActorComponent(AActor* Actor) const
+{
+	if (Actor != nullptr)
+	{
+		UActorComponent* ActorComponent = Actor->GetComponentByClass(UAttractableActorComponent::StaticClass());
+
+		return Cast<UAttractableActorComponent>(ActorComponent);
+	}
+	return nullptr;
 }
 
 void AVisualStudioTestCharacter::StartAttracting()
@@ -215,5 +237,13 @@ void AVisualStudioTestCharacter::StartAttracting()
 
 void AVisualStudioTestCharacter::StopAttracting()
 {
+	for (AActor* Actor : m_AttractedActors)
+	{
+		if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(Actor))
+		{
+			AttractableComponent->StartAttracting(nullptr);
+		}
+	}
 
+	m_AttractedActors.Reset();
 }

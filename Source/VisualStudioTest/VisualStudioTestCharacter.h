@@ -96,5 +96,9 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	TArray<AActor*> m_AttractedActors;
+
+	class UAttractableActorComponent* GetAttractableActorComponent(AActor* Actor) const;
+
 };
 
