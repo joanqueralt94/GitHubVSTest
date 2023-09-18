@@ -166,6 +166,7 @@ void AVisualStudioTestCharacter::SpawnObject()
 void AVisualStudioTestCharacter::RayCast()
 {
 	TArray<FHitResult> m_OutHitArray;
+	m_OutHitArray.Reset();
 
 	FVector Start = FollowCamera->GetComponentLocation();
 	const FVector ForwardVector = FollowCamera->GetForwardVector();
@@ -180,18 +181,15 @@ void AVisualStudioTestCharacter::RayCast()
 	check(MyWorld != nullptr);
 
 	static constexpr bool bPersistentLines = false;
-	static constexpr float LifeTime = 1.f;
+	static constexpr float LifeTime = 2.f;
 	static constexpr uint8 DepthPriority = 0;
-	static constexpr float Thickness = 1.f;
+	static constexpr float Thickness = 2.f;
 
 	DrawDebugLine(MyWorld, Start, End, FColor::Yellow, bPersistentLines, LifeTime, DepthPriority, Thickness);
 
 	static constexpr ECollisionChannel TraceChannel = ECC_Visibility;
 
-	//const bool bIsHit = MyWorld->LineTraceSingleByChannel(OutHit, Start, End, TraceChannel, CollisionParams);
-
 	const bool bIsHitArray = MyWorld->LineTraceMultiByChannel(m_OutHitArray, Start, End, TraceChannel, CollisionParams);
-
 
 	if (bIsHitArray)
 	{
@@ -207,10 +205,10 @@ void AVisualStudioTestCharacter::RayCast()
 					m_AttractedActors.AddUnique(ActorHit);
 					AttractableComponent->StartAttracting(this);
 				}
-
 			}
 		}
-		
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Num Hits: " + FString::FromInt(m_OutHitArray.Num()));
+
 	}
 }
 

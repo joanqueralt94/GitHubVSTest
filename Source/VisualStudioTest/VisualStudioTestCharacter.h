@@ -91,8 +91,7 @@ public:
 
 	void RayCast();
 
-	//bool bDoRaycast flag per controlar que el player faci o no el raycast
-	bool bDoRaycast = false;
+	//bool bPlayerIsStaring = false;
 
 	virtual void Tick(float DeltaTime) override;
 

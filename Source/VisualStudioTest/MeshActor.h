@@ -44,8 +44,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UAttractableActorComponent* AttractableActorComp;
 
-	//Array de pointers a Actors que li faig el raycast
-
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
