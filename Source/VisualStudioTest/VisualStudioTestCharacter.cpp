@@ -214,7 +214,6 @@ void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Check if the attract input is pressed
 	if (bIsAttractInputPressed)
 	{
 		// Get the character's forward vector

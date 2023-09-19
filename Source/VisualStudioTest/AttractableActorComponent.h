@@ -40,5 +40,4 @@ private:
 
 	void Attraction(AActor* OwnerActor, AActor* AttractingActor, float DeltaTime, float AttractionSpeed);
 
-		
 };
