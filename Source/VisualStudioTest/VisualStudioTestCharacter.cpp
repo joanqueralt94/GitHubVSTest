@@ -63,6 +63,8 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 
 	PlayerInputComponent->BindAction("Attract", IE_Pressed, this, &AVisualStudioTestCharacter::StartAttracting);
 	PlayerInputComponent->BindAction("Attract", IE_Released, this, &AVisualStudioTestCharacter::StopAttracting);
+	//PlayerInputComponent->BindAction("Attract", IE_Repeat, this, &AVisualStudioTestCharacter::TestRepeat);
+
 
 	PlayerInputComponent->BindAction("Spawn", IE_Pressed, this, &AVisualStudioTestCharacter::SpawnObject);
 
@@ -164,9 +166,6 @@ void AVisualStudioTestCharacter::SpawnObject()
 
 void AVisualStudioTestCharacter::RayCast()
 {
-	TArray<FHitResult> m_OutHitArray;
-	m_OutHitArray.Reset();
-
 	FVector Start = FollowCamera->GetComponentLocation();
 	const FVector ForwardVector = FollowCamera->GetForwardVector();
 
@@ -188,23 +187,22 @@ void AVisualStudioTestCharacter::RayCast()
 
 	static constexpr ECollisionChannel TraceChannel = ECC_Visibility;
 
-	const bool bIsHitArray = MyWorld->LineTraceMultiByChannel(m_OutHitArray, Start, End, TraceChannel, CollisionParams);
+	TArray<FHitResult> OutHitArray;
 
-	if (bIsHitArray)
+	MyWorld->LineTraceMultiByChannel(OutHitArray, Start, End, TraceChannel, CollisionParams);
+
+	for (FHitResult& HitResult : OutHitArray)
 	{
-		for (FHitResult& HitResult : m_OutHitArray)
+		AActor* ActorHit = HitResult.GetActor();
+		if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
 		{
-			AActor* ActorHit = HitResult.GetActor();
-			if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
-			{
-				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Actor Hit: " + ActorHit->GetName());
-				UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
+			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Actor Hit: " + ActorHit->GetName());
+			UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
 
-				if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
-				{
-					m_AttractedActors.AddUnique(ActorHit);
-					AttractableComponent->StartAttracting(this);
-				}
+			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
+			{
+				m_AttractedActors.AddUnique(ActorHit);
+				AttractableComponent->StartAttracting(this);
 			}
 		}
 	}
@@ -232,10 +230,10 @@ void AVisualStudioTestCharacter::Tick(float DeltaTime)
 				ToActor.Normalize();
 
 				// Calculate the dot product between the character's forward vector and the vector to the actor
-				float DotProduct = FVector::DotProduct(CharacterForward, ToActor);
+				const float DotProduct = FVector::DotProduct(CharacterForward, ToActor);
 
 				// Calculate the angle in degrees
-				float AngleInDegrees = FMath::Acos(DotProduct) * (180.0f / PI);
+				const float AngleInDegrees = FMath::Acos(DotProduct) * (180.0f / PI);
 
 				// If the angle is greater than the threshold, add the actor to the removal list
 				if (AngleInDegrees > ms_MaxAttractingAngle)
