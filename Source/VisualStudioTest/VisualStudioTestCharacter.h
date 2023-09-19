@@ -80,6 +80,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Raycast")
 	float RaycastDistance = 5000.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Raycast")
+	float ms_MaxAttractingAngle = 30.0f;
+
 	UFUNCTION(BlueprintCallable)
 	void SpawnObject();
 
@@ -91,7 +94,7 @@ public:
 
 	void RayCast();
 
-	//bool bPlayerIsStaring = false;
+	bool bIsAttractInputPressed = false;
 
 	virtual void Tick(float DeltaTime) override;
 

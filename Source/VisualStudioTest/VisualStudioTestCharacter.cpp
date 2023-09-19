@@ -213,6 +213,51 @@ void AVisualStudioTestCharacter::RayCast()
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Check if the attract input is pressed
+	if (bIsAttractInputPressed)
+	{
+		// Get the character's forward vector
+		FVector CharacterForward = GetActorForwardVector();
+
+		// Create a list of attracted actors to remove
+		TArray<AActor*> ActorsToRemove;
+
+		// Iterate through the attracted actors
+		for (AActor* AttractedActor : m_AttractedActors)
+		{
+			if (AttractedActor)
+			{
+				// Calculate the vector pointing from the character to the attracted actor
+				FVector ToActor = AttractedActor->GetActorLocation() - GetActorLocation();
+				ToActor.Normalize();
+
+				// Calculate the dot product between the character's forward vector and the vector to the actor
+				float DotProduct = FVector::DotProduct(CharacterForward, ToActor);
+
+				// Calculate the angle in degrees
+				float AngleInDegrees = FMath::Acos(DotProduct) * (180.0f / PI);
+
+				// If the angle is greater than the threshold, add the actor to the removal list
+				if (AngleInDegrees > ms_MaxAttractingAngle)
+				{
+					ActorsToRemove.Add(AttractedActor);
+				}
+			}
+		}
+
+		// Remove actors that are no longer attracted
+		for (AActor* ActorToRemove : ActorsToRemove)
+		{
+			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorToRemove))
+			{
+				AttractableComponent->StartAttracting(nullptr);
+			}
+
+			// Remove the actor from the attracted list
+			m_AttractedActors.Remove(ActorToRemove);
+		}
+	}
 }
 
 UAttractableActorComponent* AVisualStudioTestCharacter::GetAttractableActorComponent(AActor* Actor) const
@@ -228,11 +273,14 @@ UAttractableActorComponent* AVisualStudioTestCharacter::GetAttractableActorCompo
 
 void AVisualStudioTestCharacter::StartAttracting()
 {
+	bIsAttractInputPressed = true;
 	RayCast();
 }
 
 void AVisualStudioTestCharacter::StopAttracting()
 {
+	bIsAttractInputPressed = false;
+
 	for (AActor* Actor : m_AttractedActors)
 	{
 		if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(Actor))
