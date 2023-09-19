@@ -11,7 +11,6 @@
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
 #include "MeshActor.h"
-#include "AttractableComponent.h"
 #include "AttractableActorComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -198,7 +197,8 @@ void AVisualStudioTestCharacter::RayCast()
 			AActor* ActorHit = HitResult.GetActor();
 			if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Actor Hit: " + ActorHit->GetName());
+				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Actor Hit: " + ActorHit->GetName());
+				UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
 
 				if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
 				{
@@ -207,8 +207,6 @@ void AVisualStudioTestCharacter::RayCast()
 				}
 			}
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Num Hits: " + FString::FromInt(m_OutHitArray.Num()));
-
 	}
 }
 

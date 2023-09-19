@@ -5,7 +5,6 @@
 #include "Components/BoxComponent.h"
 #include "Engine/Engine.h"
 #include "kismet/gameplaystatics.h"
-#include "AttractableComponent.h"
 #include "AttractableActorComponent.h"
 
 // Sets default values
@@ -54,7 +53,7 @@ void AMeshActor::OnOverlapBegin(UPrimitiveComponent* HitComp, AActor* OtherActor
 {
 	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Overlap Begin Function Called");
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, ThirdPersonCharacter->GetName() + "has destroyed" + this->GetName());
 		this->Destroy();
 	}
 }
@@ -63,7 +62,6 @@ void AMeshActor::OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 {
 	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Overlap End Function Called");
 		this->Destroy();
 	}
 }

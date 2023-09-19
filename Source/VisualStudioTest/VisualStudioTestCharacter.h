@@ -77,6 +77,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	int SpawnDistance;
 
+	UPROPERTY(EditAnywhere, Category = "Raycast")
+	float RaycastDistance = 5000.0f;
+
 	UFUNCTION(BlueprintCallable)
 	void SpawnObject();
 
@@ -85,9 +88,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StopAttracting();
-
-	UPROPERTY(EditAnywhere, Category = "Raycast")
-	float RaycastDistance = 5000.0f;
 
 	void RayCast();
 
