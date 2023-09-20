@@ -70,7 +70,7 @@ void URaycastAngleActorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 		{
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorToRemove))
 			{
-				AttractableComponent->StartAttracting(nullptr);
+				AttractableComponent->StartAttraction(nullptr);
 			}
 
 			// Remove the actor from the attracted list
@@ -118,7 +118,7 @@ void URaycastAngleActorComponent::Raycast()
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
 			{
 				ThirdPersonCharacter->m_AttractedActors.AddUnique(ActorHit);
-				AttractableComponent->StartAttracting(ThirdPersonCharacter);
+				AttractableComponent->StartAttraction(ThirdPersonCharacter);
 			}
 		}
 	}
@@ -138,7 +138,7 @@ void URaycastAngleActorComponent::StopAttracting()
 	{
 		if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(Actor))
 		{
-			AttractableComponent->StartAttracting(nullptr);
+			AttractableComponent->StartAttraction(nullptr);
 		}
 	}
 

@@ -36,7 +36,7 @@ void UAttractableActorComponent::TickComponent(float DeltaTime, ELevelTick TickT
 
 }
 
-void UAttractableActorComponent::StartAttracting(AActor* AttractingActor)
+void UAttractableActorComponent::StartAttraction(AActor* AttractingActor)
 {
 	SetIsAttracting(AttractingActor != nullptr);
 	m_AttractingActor = AttractingActor;

@@ -30,7 +30,7 @@ public:
 	bool GetIsAttracting() const { return bIsAttracting;}
 	void SetIsAttracting(bool bValue) { bIsAttracting = bValue;	}
 	
-	void StartAttracting(AActor* AttractingActor);
+	void StartAttraction(AActor* AttractingActor);
 
 private:
 	bool bIsAttracting = false;
