@@ -7,6 +7,9 @@
 #include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
+
 
 // Sets default values for this component's properties
 URaycastTimerActorComponent::URaycastTimerActorComponent()
@@ -91,13 +94,16 @@ void URaycastTimerActorComponent::StartAttracting()
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Function Attract Timer System");
 
 	bIsAttractInputPressed = true;
-	//Timer here
+
+	//GetWorld()->GetTimerManager().SetTimer(RaycastTimerHandle, this, &URaycastTimerActorComponent::Raycast, RaycastInterval, true);
 	Raycast();
 }
 
 void URaycastTimerActorComponent::StopAttracting()
 {
 	bIsAttractInputPressed = false;
+
+	//GetWorld()->GetTimerManager().ClearTimer(RaycastTimerHandle);
 
 	for (AActor* Actor : ThirdPersonCharacter->m_AttractedActors)
 	{
@@ -120,4 +126,3 @@ UAttractableActorComponent* URaycastTimerActorComponent::GetAttractableActorComp
 	}
 	return nullptr;
 }
-
