@@ -86,21 +86,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SpawnObject();
 
-	UFUNCTION(BlueprintCallable)
-	void StartAttracting();
+	//void RayCast();
 
-	UFUNCTION(BlueprintCallable)
-	void StopAttracting();
-
-	void RayCast();
-
-	bool bIsAttractInputPressed = false;
+	//bool bIsAttractInputPressed = false;
 
 	virtual void Tick(float DeltaTime) override;
 
 	TArray<AActor*> m_AttractedActors;
 
-	class UAttractableActorComponent* GetAttractableActorComponent(AActor* Actor) const;
+	class URaycastAngleActorComponent* RaycastAngleActorComponent;
 
 };
 

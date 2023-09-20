@@ -12,6 +12,7 @@
 #include "DrawDebugHelpers.h"
 #include "MeshActor.h"
 #include "AttractableActorComponent.h"
+#include "RaycastAngleActorComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -49,6 +50,9 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	RaycastAngleActorComponent = CreateDefaultSubobject<URaycastAngleActorComponent>(TEXT("RaycastAngleActorComponent"));
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,8 +65,8 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Attract", IE_Pressed, this, &AVisualStudioTestCharacter::StartAttracting);
-	PlayerInputComponent->BindAction("Attract", IE_Released, this, &AVisualStudioTestCharacter::StopAttracting);
+	PlayerInputComponent->BindAction("Attract", IE_Pressed, RaycastAngleActorComponent, &URaycastAngleActorComponent::StartAttracting);
+	PlayerInputComponent->BindAction("Attract", IE_Released, RaycastAngleActorComponent, &URaycastAngleActorComponent::StopAttracting);
 	//PlayerInputComponent->BindAction("Attract", IE_Repeat, this, &AVisualStudioTestCharacter::TestRepeat);
 
 
@@ -164,127 +168,8 @@ void AVisualStudioTestCharacter::SpawnObject()
 
 }
 
-void AVisualStudioTestCharacter::RayCast()
-{
-	FVector Start = FollowCamera->GetComponentLocation();
-	const FVector ForwardVector = FollowCamera->GetForwardVector();
-
-	Start = Start + (ForwardVector * CameraBoom->TargetArmLength);
-
-	const FVector End = Start + (ForwardVector * RaycastDistance);
-	FCollisionQueryParams CollisionParams;
-	CollisionParams.AddIgnoredActor(GetOwner());
-
-	const UWorld* MyWorld = GetWorld();
-	check(MyWorld != nullptr);
-
-	static constexpr bool bPersistentLines = false;
-	static constexpr float LifeTime = 2.f;
-	static constexpr uint8 DepthPriority = 0;
-	static constexpr float Thickness = 2.f;
-
-	DrawDebugLine(MyWorld, Start, End, FColor::Yellow, bPersistentLines, LifeTime, DepthPriority, Thickness);
-
-	static constexpr ECollisionChannel TraceChannel = ECC_Visibility;
-
-	TArray<FHitResult> OutHitArray;
-
-	MyWorld->LineTraceMultiByChannel(OutHitArray, Start, End, TraceChannel, CollisionParams);
-
-	for (FHitResult& HitResult : OutHitArray)
-	{
-		AActor* ActorHit = HitResult.GetActor();
-		if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
-		{
-			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Actor Hit: " + ActorHit->GetName());
-			UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
-
-			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
-			{
-				m_AttractedActors.AddUnique(ActorHit);
-				AttractableComponent->StartAttracting(this);
-			}
-		}
-	}
-}
-
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsAttractInputPressed)
-	{
-		// Get the character's forward vector
-		FVector CharacterForward = GetActorForwardVector();
-
-		// Create a list of attracted actors to remove
-		TArray<AActor*> ActorsToRemove;
-
-		// Iterate through the attracted actors
-		for (AActor* AttractedActor : m_AttractedActors)
-		{
-			if (AttractedActor)
-			{
-				// Calculate the vector pointing from the character to the attracted actor
-				FVector ToActor = AttractedActor->GetActorLocation() - GetActorLocation();
-				ToActor.Normalize();
-
-				// Calculate the dot product between the character's forward vector and the vector to the actor
-				const float DotProduct = FVector::DotProduct(CharacterForward, ToActor);
-
-				// Calculate the angle in degrees
-				const float AngleInDegrees = FMath::Acos(DotProduct) * (180.0f / PI);
-
-				// If the angle is greater than the threshold, add the actor to the removal list
-				if (AngleInDegrees > ms_MaxAttractingAngle)
-				{
-					ActorsToRemove.Add(AttractedActor);
-				}
-			}
-		}
-
-		// Remove actors that are no longer attracted
-		for (AActor* ActorToRemove : ActorsToRemove)
-		{
-			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorToRemove))
-			{
-				AttractableComponent->StartAttracting(nullptr);
-			}
-
-			// Remove the actor from the attracted list
-			m_AttractedActors.Remove(ActorToRemove);
-		}
-	}
-}
-
-UAttractableActorComponent* AVisualStudioTestCharacter::GetAttractableActorComponent(AActor* Actor) const
-{
-	if (Actor != nullptr)
-	{
-		UActorComponent* ActorComponent = Actor->GetComponentByClass(UAttractableActorComponent::StaticClass());
-
-		return Cast<UAttractableActorComponent>(ActorComponent);
-	}
-	return nullptr;
-}
-
-void AVisualStudioTestCharacter::StartAttracting()
-{
-	bIsAttractInputPressed = true;
-	RayCast();
-}
-
-void AVisualStudioTestCharacter::StopAttracting()
-{
-	bIsAttractInputPressed = false;
-
-	for (AActor* Actor : m_AttractedActors)
-	{
-		if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(Actor))
-		{
-			AttractableComponent->StartAttracting(nullptr);
-		}
-	}
-
-	m_AttractedActors.Reset();
 }

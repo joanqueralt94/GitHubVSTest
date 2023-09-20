@@ -32,3 +32,18 @@ void URaycastTimerActorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	// ...
 }
 
+void URaycastTimerActorComponent::Raycast()
+{
+
+}
+
+void URaycastTimerActorComponent::StartAttracting()
+{
+
+}
+
+void URaycastTimerActorComponent::StopAttracting()
+{
+
+}
+
