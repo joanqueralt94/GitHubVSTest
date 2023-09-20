@@ -13,6 +13,7 @@
 #include "MeshActor.h"
 #include "AttractableActorComponent.h"
 #include "RaycastAngleActorComponent.h"
+#include "RaycastTimerActorComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -52,7 +53,8 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	RaycastAngleActorComponent = CreateDefaultSubobject<URaycastAngleActorComponent>(TEXT("RaycastAngleActorComponent"));
-
+	RaycastTimerActorComponent = CreateDefaultSubobject<URaycastTimerActorComponent>(TEXT("RaycastTimerActorComponent"));
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,13 +67,18 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Attract", IE_Pressed, RaycastAngleActorComponent, &URaycastAngleActorComponent::StartAttracting);
-	PlayerInputComponent->BindAction("Attract", IE_Released, RaycastAngleActorComponent, &URaycastAngleActorComponent::StopAttracting);
-	//PlayerInputComponent->BindAction("Attract", IE_Repeat, this, &AVisualStudioTestCharacter::TestRepeat);
-
+	if (GetIsRaycastAngleMode())
+	{
+		PlayerInputComponent->BindAction("Attract", IE_Pressed, RaycastAngleActorComponent, &URaycastAngleActorComponent::StartAttracting);
+		PlayerInputComponent->BindAction("Attract", IE_Released, RaycastAngleActorComponent, &URaycastAngleActorComponent::StopAttracting);
+	}
+	else if (GetIsRaycastTimerMode())
+	{
+		PlayerInputComponent->BindAction("Attract", IE_Pressed, RaycastTimerActorComponent, &URaycastTimerActorComponent::StartAttracting);
+		PlayerInputComponent->BindAction("Attract", IE_Released, RaycastTimerActorComponent, &URaycastTimerActorComponent::StopAttracting);
+	}
 
 	PlayerInputComponent->BindAction("Spawn", IE_Pressed, this, &AVisualStudioTestCharacter::SpawnObject);
-
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AVisualStudioTestCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AVisualStudioTestCharacter::MoveRight);
@@ -172,4 +179,9 @@ void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AVisualStudioTestCharacter::TestRepeat()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Function Attract Repeated");
 }

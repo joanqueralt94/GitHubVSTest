@@ -32,11 +32,11 @@ public:
 
 	void Raycast();
 
-	UFUNCTION(BlueprintCallable)
 	void StartAttracting();
 
-	UFUNCTION(BlueprintCallable)
 	void StopAttracting();
+
+	void AngleDistanceCalculation();
 
 	bool bIsAttractInputPressed = false;
 

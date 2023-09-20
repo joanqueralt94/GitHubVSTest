@@ -83,18 +83,29 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Raycast")
 	float ms_MaxAttractingAngle = 30.0f;
 
-	UFUNCTION(BlueprintCallable)
+	UPROPERTY(EditAnywhere, Category = "Raycast")
+	bool bRaycastAngleMode = false;
+
+	UPROPERTY(EditAnywhere, Category = "Raycast")
+	bool bRaycastTimerMode = false;
+
+	bool GetIsRaycastAngleMode() const { return bRaycastAngleMode; }
+	void SetIsRaycastAngleMode(bool bValue) { bRaycastAngleMode = bValue; }
+
+	bool GetIsRaycastTimerMode() const { return bRaycastTimerMode; }
+	void SetIsRaycastTimerMode(bool bValue) { bRaycastTimerMode = bValue; }
+
 	void SpawnObject();
-
-	//void RayCast();
-
-	//bool bIsAttractInputPressed = false;
 
 	virtual void Tick(float DeltaTime) override;
 
 	TArray<AActor*> m_AttractedActors;
 
 	class URaycastAngleActorComponent* RaycastAngleActorComponent;
+
+	class URaycastTimerActorComponent* RaycastTimerActorComponent;
+
+	void TestRepeat();
 
 };
 

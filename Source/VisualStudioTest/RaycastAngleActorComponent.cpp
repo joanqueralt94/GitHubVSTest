@@ -36,52 +36,12 @@ void URaycastAngleActorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 	if (bIsAttractInputPressed)
 	{
-		// Get the character's forward vector
-		FVector CharacterForward = ThirdPersonCharacter->GetActorForwardVector();
-
-		// Create a list of attracted actors to remove
-		TArray<AActor*> ActorsToRemove;
-
-		// Iterate through the attracted actors
-		for (AActor* AttractedActor : ThirdPersonCharacter->m_AttractedActors)
-		{
-			if (AttractedActor)
-			{
-				// Calculate the vector pointing from the character to the attracted actor
-				FVector ToActor = AttractedActor->GetActorLocation() - ThirdPersonCharacter->GetActorLocation();
-				ToActor.Normalize();
-
-				// Calculate the dot product between the character's forward vector and the vector to the actor
-				const float DotProduct = FVector::DotProduct(CharacterForward, ToActor);
-
-				// Calculate the angle in degrees
-				const float AngleInDegrees = FMath::Acos(DotProduct) * (180.0f / PI);
-
-				// If the angle is greater than the threshold, add the actor to the removal list
-				if (AngleInDegrees > ThirdPersonCharacter->ms_MaxAttractingAngle)
-				{
-					ActorsToRemove.Add(AttractedActor);
-				}
-			}
-		}
-
-		// Remove actors that are no longer attracted
-		for (AActor* ActorToRemove : ActorsToRemove)
-		{
-			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorToRemove))
-			{
-				AttractableComponent->StartAttraction(nullptr);
-			}
-
-			// Remove the actor from the attracted list
-			ThirdPersonCharacter->m_AttractedActors.Remove(ActorToRemove);
-		}
+		AngleDistanceCalculation();
 	}
 }
 
 void URaycastAngleActorComponent::Raycast()
 {
-	
 	FVector Start = ThirdPersonCharacter->GetFollowCamera()->GetComponentLocation();
 	const FVector ForwardVector = ThirdPersonCharacter->GetFollowCamera()->GetForwardVector();
 
@@ -112,7 +72,6 @@ void URaycastAngleActorComponent::Raycast()
 		AActor* ActorHit = HitResult.GetActor();
 		if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
 		{
-			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Actor Hit: " + ActorHit->GetName());
 			UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
 
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
@@ -126,6 +85,7 @@ void URaycastAngleActorComponent::Raycast()
 
 void URaycastAngleActorComponent::StartAttracting()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Function Attract Angle System");
 	bIsAttractInputPressed = true;
 	Raycast();
 }
@@ -143,6 +103,50 @@ void URaycastAngleActorComponent::StopAttracting()
 	}
 
 	ThirdPersonCharacter->m_AttractedActors.Reset();
+}
+
+void URaycastAngleActorComponent::AngleDistanceCalculation()
+{
+	// Get the character's forward vector
+	FVector CharacterForward = ThirdPersonCharacter->GetActorForwardVector();
+
+	// Create a list of attracted actors to remove
+	TArray<AActor*> ActorsToRemove;
+
+	// Iterate through the attracted actors
+	for (AActor* AttractedActor : ThirdPersonCharacter->m_AttractedActors)
+	{
+		if (AttractedActor)
+		{
+			// Calculate the vector pointing from the character to the attracted actor
+			FVector ToActor = AttractedActor->GetActorLocation() - ThirdPersonCharacter->GetActorLocation();
+			ToActor.Normalize();
+
+			// Calculate the dot product between the character's forward vector and the vector to the actor
+			const float DotProduct = FVector::DotProduct(CharacterForward, ToActor);
+
+			// Calculate the angle in degrees
+			const float AngleInDegrees = FMath::Acos(DotProduct) * (180.0f / PI);
+
+			// If the angle is greater than the threshold, add the actor to the removal list
+			if (AngleInDegrees > ThirdPersonCharacter->ms_MaxAttractingAngle)
+			{
+				ActorsToRemove.Add(AttractedActor);
+			}
+		}
+	}
+
+	// Remove actors that are no longer attracted
+	for (AActor* ActorToRemove : ActorsToRemove)
+	{
+		if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorToRemove))
+		{
+			AttractableComponent->StartAttraction(nullptr);
+		}
+
+		// Remove the actor from the attracted list
+		ThirdPersonCharacter->m_AttractedActors.Remove(ActorToRemove);
+	}
 }
 
 UAttractableActorComponent* URaycastAngleActorComponent::GetAttractableActorComponent(AActor* Actor) const

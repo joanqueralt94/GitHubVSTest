@@ -2,6 +2,10 @@
 
 
 #include "AttractableActorComponent.h"
+#include "kismet/gameplaystatics.h"
+#include "DrawDebugHelpers.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 // Sets default values for this component's properties
 UAttractableActorComponent::UAttractableActorComponent()

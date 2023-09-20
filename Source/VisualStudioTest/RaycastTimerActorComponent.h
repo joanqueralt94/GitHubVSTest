@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "VisualStudioTestCharacter.h"
+#include "GameFramework/Character.h"
 #include "RaycastTimerActorComponent.generated.h"
 
 
@@ -21,15 +23,20 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	AVisualStudioTestCharacter* ThirdPersonCharacter;
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void Raycast();
 
-	UFUNCTION(BlueprintCallable)
 	void StartAttracting();
 
-	UFUNCTION(BlueprintCallable)
 	void StopAttracting();
+
+	bool bIsAttractInputPressed = false;
+
+	class UAttractableActorComponent* GetAttractableActorComponent(AActor* Actor) const;
 
 };
