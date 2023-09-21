@@ -20,7 +20,7 @@ private:
 
 	// The interval between each Raycast function call in seconds
 	UPROPERTY(EditAnywhere, Category = "Raycast")
-	float RaycastInterval = 2.0f; // Adjust the interval as needed
+	float RaycastInterval = 0.8f; // Adjust the interval as needed
 
 public:	
 	// Sets default values for this component's properties
@@ -29,8 +29,6 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	int32 m_CallTracker = 1;
 
 public:	
 

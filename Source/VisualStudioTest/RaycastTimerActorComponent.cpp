@@ -95,15 +95,14 @@ void URaycastTimerActorComponent::StartAttracting()
 
 	bIsAttractInputPressed = true;
 
-	//GetWorld()->GetTimerManager().SetTimer(RaycastTimerHandle, this, &URaycastTimerActorComponent::Raycast, RaycastInterval, true);
-	Raycast();
+	GetWorld()->GetTimerManager().SetTimer(RaycastTimerHandle, this, &URaycastTimerActorComponent::Raycast, RaycastInterval, true);
 }
 
 void URaycastTimerActorComponent::StopAttracting()
 {
 	bIsAttractInputPressed = false;
 
-	//GetWorld()->GetTimerManager().ClearTimer(RaycastTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(RaycastTimerHandle);
 
 	for (AActor* Actor : ThirdPersonCharacter->m_AttractedActors)
 	{
