@@ -32,7 +32,7 @@ protected:
 
 public:	
 
-	AVisualStudioTestCharacter* ThirdPersonCharacter;
+	AVisualStudioTestCharacter* m_ThirdPersonCharacter = nullptr;
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -46,5 +46,7 @@ public:
 	bool bIsAttractInputPressed = false;
 
 	class UAttractableActorComponent* GetAttractableActorComponent(AActor* Actor) const;
+
+	void ResetAttractedActors(TArray<AActor*>& AttractedActors);
 
 };

@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "VisualStudioTestCharacter.generated.h"
 
+class URaycastAngleActorComponent;
+class URaycastTimerActorComponent;
+
 UCLASS(config=Game)
 class AVisualStudioTestCharacter : public ACharacter
 {
@@ -75,7 +78,7 @@ public:
 	TSubclassOf<AActor> ActorToSpawn;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-	int SpawnDistance;
+	int SpawnDistance = 0;
 
 	UPROPERTY(EditAnywhere, Category = "Raycast")
 	float RaycastDistance = 5000.0f;
@@ -101,9 +104,13 @@ public:
 
 	TArray<AActor*> m_AttractedActors;
 
-	class URaycastAngleActorComponent* RaycastAngleActorComponent;
+	TArray<AActor*>& GetAttractedActors() { return m_AttractedActors; }
 
-	class URaycastTimerActorComponent* RaycastTimerActorComponent;
+	UPROPERTY()
+	URaycastAngleActorComponent* RaycastAngleActorComponent = nullptr;
+
+	UPROPERTY()
+	URaycastTimerActorComponent* RaycastTimerActorComponent = nullptr;
 
 	void TestRepeat();
 

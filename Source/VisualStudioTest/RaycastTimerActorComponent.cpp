@@ -27,7 +27,7 @@ void URaycastTimerActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	m_ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 	// ...
 	
@@ -46,14 +46,14 @@ void URaycastTimerActorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 void URaycastTimerActorComponent::Raycast()
 {
-	ThirdPersonCharacter->m_AttractedActors.Reset();
+	ResetAttractedActors(m_ThirdPersonCharacter->GetAttractedActors());
 
-	FVector Start = ThirdPersonCharacter->GetFollowCamera()->GetComponentLocation();
-	const FVector ForwardVector = ThirdPersonCharacter->GetFollowCamera()->GetForwardVector();
+	FVector Start = m_ThirdPersonCharacter->GetFollowCamera()->GetComponentLocation();
+	const FVector ForwardVector = m_ThirdPersonCharacter->GetFollowCamera()->GetForwardVector();
 
-	Start = Start + (ForwardVector * ThirdPersonCharacter->GetCameraBoom()->TargetArmLength);
+	Start = Start + (ForwardVector * m_ThirdPersonCharacter->GetCameraBoom()->TargetArmLength);
 
-	const FVector End = Start + (ForwardVector * ThirdPersonCharacter->RaycastDistance);
+	const FVector End = Start + (ForwardVector * m_ThirdPersonCharacter->RaycastDistance);
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(GetOwner());
 
@@ -82,8 +82,8 @@ void URaycastTimerActorComponent::Raycast()
 
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
 			{
-				ThirdPersonCharacter->m_AttractedActors.AddUnique(ActorHit);
-				AttractableComponent->StartAttraction(ThirdPersonCharacter);
+				m_ThirdPersonCharacter->m_AttractedActors.AddUnique(ActorHit);
+				AttractableComponent->StartAttraction(m_ThirdPersonCharacter);
 			}
 		}
 	}
@@ -104,15 +104,7 @@ void URaycastTimerActorComponent::StopAttracting()
 
 	GetWorld()->GetTimerManager().ClearTimer(RaycastTimerHandle);
 
-	for (AActor* Actor : ThirdPersonCharacter->m_AttractedActors)
-	{
-		if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(Actor))
-		{
-			AttractableComponent->StartAttraction(nullptr);
-		}
-	}
-
-	ThirdPersonCharacter->m_AttractedActors.Reset();
+	ResetAttractedActors(m_ThirdPersonCharacter->GetAttractedActors());
 }
 
 UAttractableActorComponent* URaycastTimerActorComponent::GetAttractableActorComponent(AActor* Actor) const
@@ -124,4 +116,17 @@ UAttractableActorComponent* URaycastTimerActorComponent::GetAttractableActorComp
 		return Cast<UAttractableActorComponent>(ActorComponent);
 	}
 	return nullptr;
+}
+
+void URaycastTimerActorComponent::ResetAttractedActors(TArray<AActor*>& AttractedActors)
+{
+	for (AActor* Actor : AttractedActors)
+	{
+		if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(Actor))
+		{
+			AttractableComponent->StartAttraction(nullptr);
+		}
+	}
+
+	AttractedActors.Reset();
 }
