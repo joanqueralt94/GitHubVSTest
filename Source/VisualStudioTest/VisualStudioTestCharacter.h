@@ -8,6 +8,7 @@
 
 class URaycastAngleActorComponent;
 class URaycastTimerActorComponent;
+class UAttractionActorComponent;
 
 UCLASS(config=Game)
 class AVisualStudioTestCharacter : public ACharacter
@@ -106,13 +107,14 @@ public:
 
 	TArray<AActor*>& GetAttractedActors() { return m_AttractedActors; }
 
-	UPROPERTY()
-	URaycastAngleActorComponent* RaycastAngleActorComponent = nullptr;
+	//UPROPERTY()
+	//URaycastAngleActorComponent* RaycastAngleActorComponent = nullptr;
+
+	//UPROPERTY()
+	//URaycastTimerActorComponent* RaycastTimerActorComponent = nullptr;
 
 	UPROPERTY()
-	URaycastTimerActorComponent* RaycastTimerActorComponent = nullptr;
-
-	void TestRepeat();
+	UAttractionActorComponent* AttractionActorComponent = nullptr;
 
 };
 

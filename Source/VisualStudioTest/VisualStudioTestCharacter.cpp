@@ -14,6 +14,7 @@
 #include "AttractableActorComponent.h"
 #include "RaycastAngleActorComponent.h"
 #include "RaycastTimerActorComponent.h"
+#include "AttractionActorComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -52,9 +53,12 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
-	RaycastAngleActorComponent = CreateDefaultSubobject<URaycastAngleActorComponent>(TEXT("RaycastAngleActorComponent"));
-	RaycastTimerActorComponent = CreateDefaultSubobject<URaycastTimerActorComponent>(TEXT("RaycastTimerActorComponent"));
-	
+	//RaycastAngleActorComponent = CreateDefaultSubobject<URaycastAngleActorComponent>(TEXT("RaycastAngleActorComponent"));
+	//RaycastTimerActorComponent = CreateDefaultSubobject<URaycastTimerActorComponent>(TEXT("RaycastTimerActorComponent"));
+	AttractionActorComponent = CreateDefaultSubobject<UAttractionActorComponent>(TEXT("AttractionActorComponent"));
+
+	AttractionActorComponent->CurrentAttractionMode = EAttractionMode::ViaTimer;
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,15 +71,15 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	if (GetIsRaycastAngleMode())
+	if (AttractionActorComponent->CurrentAttractionMode == EAttractionMode::ViaAngle)
 	{
-		PlayerInputComponent->BindAction("Attract", IE_Pressed, RaycastAngleActorComponent, &URaycastAngleActorComponent::StartAttracting);
-		PlayerInputComponent->BindAction("Attract", IE_Released, RaycastAngleActorComponent, &URaycastAngleActorComponent::StopAttracting);
+		PlayerInputComponent->BindAction("Attract", IE_Pressed, AttractionActorComponent, &UAttractionActorComponent::StartAttracting);
+		PlayerInputComponent->BindAction("Attract", IE_Released, AttractionActorComponent, &UAttractionActorComponent::StopAttracting);
 	}
-	else if (GetIsRaycastTimerMode())
+	else if (AttractionActorComponent->CurrentAttractionMode == EAttractionMode::ViaTimer)
 	{
-		PlayerInputComponent->BindAction("Attract", IE_Pressed, RaycastTimerActorComponent, &URaycastTimerActorComponent::StartAttracting);
-		PlayerInputComponent->BindAction("Attract", IE_Released, RaycastTimerActorComponent, &URaycastTimerActorComponent::StopAttracting);
+		PlayerInputComponent->BindAction("Attract", IE_Pressed, AttractionActorComponent, &UAttractionActorComponent::StartAttracting);
+		PlayerInputComponent->BindAction("Attract", IE_Released, AttractionActorComponent, &UAttractionActorComponent::StopAttracting);
 	}
 
 	PlayerInputComponent->BindAction("Spawn", IE_Pressed, this, &AVisualStudioTestCharacter::SpawnObject);
@@ -178,10 +182,4 @@ void AVisualStudioTestCharacter::SpawnObject()
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-void AVisualStudioTestCharacter::TestRepeat()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Function Attract Repeated");
 }
