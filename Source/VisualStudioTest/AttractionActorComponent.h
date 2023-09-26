@@ -4,14 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "VisualStudioTestCharacter.h"
 #include "GameFramework/Character.h"
 #include "AttractionActorComponent.generated.h"
 
+class AVisualStudioTestCharacter;
 
 UENUM(BlueprintType)
 enum class EAttractionMode : uint8
 {
+	Invalid UMETA(DisplayName = "None"),
 	ViaAngle UMETA(DisplayName = "Via Angle"),
 	ViaTimer UMETA(DisplayName = "Via Timer")
 };
@@ -43,6 +44,8 @@ public:
 	
 	void Raycast();
 
+	void RaycastTimer();
+
 	void StartAttracting();
 
 	void StopAttracting();
@@ -59,5 +62,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	EAttractionMode CurrentAttractionMode;
-				
+
+	//Afegir geter i seters afegir "m_CurrentAttractionMode"
+
+	//Methods a cridar a Start Attracting (per no tenir dos switches	
+	//Raycast()
+	//RaycastTimer()
+
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AttractionActorComponent.h"
 #include "VisualStudioTestCharacter.generated.h"
 
 class URaycastAngleActorComponent;
@@ -81,6 +82,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	int SpawnDistance = 0;
 
+	//moure propietats de RAycast al nou component
 	UPROPERTY(EditAnywhere, Category = "Raycast")
 	float RaycastDistance = 5000.0f;
 
@@ -93,6 +95,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Raycast")
 	bool bRaycastTimerMode = false;
 
+	//fins aquí moure propietats
+
 	bool GetIsRaycastAngleMode() const { return bRaycastAngleMode; }
 	void SetIsRaycastAngleMode(bool bValue) { bRaycastAngleMode = bValue; }
 
@@ -103,18 +107,15 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	//Moure al nou component
 	TArray<AActor*> m_AttractedActors;
 
 	TArray<AActor*>& GetAttractedActors() { return m_AttractedActors; }
 
-	//UPROPERTY()
-	//URaycastAngleActorComponent* RaycastAngleActorComponent = nullptr;
-
-	//UPROPERTY()
-	//URaycastTimerActorComponent* RaycastTimerActorComponent = nullptr;
-
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UAttractionActorComponent* AttractionActorComponent = nullptr;
+
+	//Afegir input Togle per cambiar de modes Timer and Angle en runtime
 
 };
 

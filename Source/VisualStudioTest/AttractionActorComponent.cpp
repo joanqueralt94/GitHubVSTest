@@ -2,6 +2,7 @@
 
 
 #include "AttractionActorComponent.h"
+#include "VisualStudioTestCharacter.h"
 #include "kismet/gameplaystatics.h"
 #include "AttractableActorComponent.h"
 #include "Camera/CameraComponent.h"
@@ -46,17 +47,14 @@ void UAttractionActorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void UAttractionActorComponent::Raycast()
 {
-	
 	switch (CurrentAttractionMode)
 	{
+	default:
+	case EAttractionMode::Invalid:
 	case EAttractionMode::ViaAngle:
-
-
 		break;
 	case EAttractionMode::ViaTimer:
-
 		ResetAttractedActors(m_ThirdPersonCharacter->GetAttractedActors());
-
 		break;
 	}
 
@@ -99,7 +97,6 @@ void UAttractionActorComponent::Raycast()
 			}
 		}
 	}
-
 }
 
 void UAttractionActorComponent::StartAttracting()

@@ -12,8 +12,6 @@
 #include "DrawDebugHelpers.h"
 #include "MeshActor.h"
 #include "AttractableActorComponent.h"
-#include "RaycastAngleActorComponent.h"
-#include "RaycastTimerActorComponent.h"
 #include "AttractionActorComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,8 +54,6 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 	//RaycastAngleActorComponent = CreateDefaultSubobject<URaycastAngleActorComponent>(TEXT("RaycastAngleActorComponent"));
 	//RaycastTimerActorComponent = CreateDefaultSubobject<URaycastTimerActorComponent>(TEXT("RaycastTimerActorComponent"));
 	AttractionActorComponent = CreateDefaultSubobject<UAttractionActorComponent>(TEXT("AttractionActorComponent"));
-
-	AttractionActorComponent->CurrentAttractionMode = EAttractionMode::ViaTimer;
 
 }
 
