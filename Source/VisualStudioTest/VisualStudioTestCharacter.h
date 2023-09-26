@@ -7,8 +7,6 @@
 #include "AttractionActorComponent.h"
 #include "VisualStudioTestCharacter.generated.h"
 
-class URaycastAngleActorComponent;
-class URaycastTimerActorComponent;
 class UAttractionActorComponent;
 
 UCLASS(config=Game)
@@ -89,19 +87,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Raycast")
 	float ms_MaxAttractingAngle = 30.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Raycast")
-	bool bRaycastAngleMode = false;
-
-	UPROPERTY(EditAnywhere, Category = "Raycast")
-	bool bRaycastTimerMode = false;
-
 	//fins aquí moure propietats
-
-	bool GetIsRaycastAngleMode() const { return bRaycastAngleMode; }
-	void SetIsRaycastAngleMode(bool bValue) { bRaycastAngleMode = bValue; }
-
-	bool GetIsRaycastTimerMode() const { return bRaycastTimerMode; }
-	void SetIsRaycastTimerMode(bool bValue) { bRaycastTimerMode = bValue; }
 
 	void SpawnObject();
 

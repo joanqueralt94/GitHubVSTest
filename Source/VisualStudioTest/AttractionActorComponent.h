@@ -28,7 +28,7 @@ private:
 
 	// The interval between each Raycast function call in seconds
 	UPROPERTY(EditAnywhere, Category = "Raycast")
-	float RaycastInterval = 0.8f; // Adjust the interval as needed
+	float RaycastInterval = 0.8f; 
 
 public:	
 	// Sets default values for this component's properties
@@ -61,12 +61,11 @@ public:
 	bool m_bIsAttractInputPressed = false;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	EAttractionMode CurrentAttractionMode;
+	EAttractionMode m_CurrentAttractionMode;
 
-	//Afegir geter i seters afegir "m_CurrentAttractionMode"
+	EAttractionMode GetAttractionMode() { return m_CurrentAttractionMode; }
+	void SetAttractionMode(EAttractionMode AttractionMode) { m_CurrentAttractionMode = AttractionMode; }
 
-	//Methods a cridar a Start Attracting (per no tenir dos switches	
-	//Raycast()
-	//RaycastTimer()
+	void ToggleAttractionMode();
 
 };

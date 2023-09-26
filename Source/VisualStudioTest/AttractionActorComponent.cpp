@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "AttractionActorComponent.h"
 #include "VisualStudioTestCharacter.h"
 #include "kismet/gameplaystatics.h"
@@ -9,9 +8,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "DrawDebugHelpers.h"
 #include "TimerManager.h"
-
-
-
 
 // Sets default values for this component's properties
 UAttractionActorComponent::UAttractionActorComponent()
@@ -47,16 +43,50 @@ void UAttractionActorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void UAttractionActorComponent::Raycast()
 {
-	switch (CurrentAttractionMode)
+	FVector Start = m_ThirdPersonCharacter->GetFollowCamera()->GetComponentLocation();
+	const FVector ForwardVector = m_ThirdPersonCharacter->GetFollowCamera()->GetForwardVector();
+
+	Start = Start + (ForwardVector * m_ThirdPersonCharacter->GetCameraBoom()->TargetArmLength);
+
+	const FVector End = Start + (ForwardVector * m_ThirdPersonCharacter->RaycastDistance);
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(GetOwner());
+
+	const UWorld* MyWorld = GetWorld();
+	check(MyWorld != nullptr);
+
+	static constexpr bool bPersistentLines = false;
+	static constexpr float LifeTime = 2.f;
+	static constexpr uint8 DepthPriority = 0;
+	static constexpr float Thickness = 2.f;
+
+	DrawDebugLine(MyWorld, Start, End, FColor::Yellow, bPersistentLines, LifeTime, DepthPriority, Thickness);
+
+	static constexpr ECollisionChannel TraceChannel = ECC_Visibility;
+
+	TArray<FHitResult> OutHitArray;
+
+	MyWorld->LineTraceMultiByChannel(OutHitArray, Start, End, TraceChannel, CollisionParams);
+
+	for (FHitResult& HitResult : OutHitArray)
 	{
-	default:
-	case EAttractionMode::Invalid:
-	case EAttractionMode::ViaAngle:
-		break;
-	case EAttractionMode::ViaTimer:
-		ResetAttractedActors(m_ThirdPersonCharacter->GetAttractedActors());
-		break;
+		AActor* ActorHit = HitResult.GetActor();
+		if (ActorHit != nullptr && ActorHit->ActorHasTag(TEXT("Attractable")))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
+
+			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
+			{
+				m_ThirdPersonCharacter->m_AttractedActors.AddUnique(ActorHit);
+				AttractableComponent->StartAttraction(m_ThirdPersonCharacter);
+			}
+		}
 	}
+}
+
+void UAttractionActorComponent::RaycastTimer()
+{
+	ResetAttractedActors(m_ThirdPersonCharacter->GetAttractedActors());
 
 	FVector Start = m_ThirdPersonCharacter->GetFollowCamera()->GetComponentLocation();
 	const FVector ForwardVector = m_ThirdPersonCharacter->GetFollowCamera()->GetForwardVector();
@@ -101,8 +131,11 @@ void UAttractionActorComponent::Raycast()
 
 void UAttractionActorComponent::StartAttracting()
 {
-	switch (CurrentAttractionMode)
+	switch (GetAttractionMode())
 	{
+	default:
+	case EAttractionMode::Invalid:
+		break;
 	case EAttractionMode::ViaAngle:
 
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Function Attract Angle System");
@@ -113,10 +146,8 @@ void UAttractionActorComponent::StartAttracting()
 	case EAttractionMode::ViaTimer:
 
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Function Attract Timer System");
-
 		m_bIsAttractInputPressed = true;
-
-		GetWorld()->GetTimerManager().SetTimer(RaycastTimerHandle, this, &UAttractionActorComponent::Raycast, RaycastInterval, true);
+		GetWorld()->GetTimerManager().SetTimer(RaycastTimerHandle, this, &UAttractionActorComponent::RaycastTimer, RaycastInterval, true);
 
 		break;
 	}
@@ -124,8 +155,11 @@ void UAttractionActorComponent::StartAttracting()
 
 void UAttractionActorComponent::StopAttracting()
 {
-	switch (CurrentAttractionMode)
+	switch (GetAttractionMode())
 	{
+	default:
+	case EAttractionMode::Invalid:
+		break;
 	case EAttractionMode::ViaAngle:
 
 		m_bIsAttractInputPressed = false;
@@ -144,9 +178,7 @@ void UAttractionActorComponent::StopAttracting()
 	case EAttractionMode::ViaTimer:
 
 		m_bIsAttractInputPressed = false;
-
 		GetWorld()->GetTimerManager().ClearTimer(RaycastTimerHandle);
-
 		ResetAttractedActors(m_ThirdPersonCharacter->GetAttractedActors());
 
 		break;
@@ -219,4 +251,18 @@ void UAttractionActorComponent::ResetAttractedActors(TArray<AActor*>& AttractedA
 	}
 
 	AttractedActors.Reset();
+}
+
+void UAttractionActorComponent::ToggleAttractionMode()
+{
+	if (GetAttractionMode() == EAttractionMode::ViaAngle)
+	{
+		SetAttractionMode(EAttractionMode::ViaTimer);
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Toggled to Timer Mode");
+	}
+	else
+	{
+		SetAttractionMode(EAttractionMode::ViaAngle);
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Toggled to Angle Mode");
+	}
 }

@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "AttractableActorComponent.h"
 #include "kismet/gameplaystatics.h"
 #include "DrawDebugHelpers.h"
@@ -56,4 +55,3 @@ void UAttractableActorComponent::Attraction(AActor* OwnerActor, AActor* Attracti
 	OwnerActor->SetActorLocation(NewVector);
 		
 }
-
