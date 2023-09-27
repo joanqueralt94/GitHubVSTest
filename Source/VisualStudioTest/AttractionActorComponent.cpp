@@ -1,11 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AttractionActorComponent.h"
-#include "VisualStudioTestCharacter.h"
 #include "kismet/gameplaystatics.h"
 #include "AttractableActorComponent.h"
-#include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "DrawDebugHelpers.h"
 #include "TimerManager.h"
 
@@ -23,9 +20,6 @@ UAttractionActorComponent::UAttractionActorComponent()
 void UAttractionActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	m_ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
 }
 
 
@@ -43,10 +37,8 @@ void UAttractionActorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void UAttractionActorComponent::Raycast()
 {
-	FVector Start = m_ThirdPersonCharacter->GetFollowCamera()->GetComponentLocation();
-	const FVector ForwardVector = m_ThirdPersonCharacter->GetFollowCamera()->GetForwardVector();
-
-	Start = Start + (ForwardVector * m_ThirdPersonCharacter->GetCameraBoom()->TargetArmLength);
+	FVector Start = GetOwner()->GetActorLocation();
+	const FVector ForwardVector = GetOwner()->GetActorForwardVector();
 
 	const FVector End = Start + (ForwardVector * RaycastDistance);
 	FCollisionQueryParams CollisionParams;
@@ -78,7 +70,7 @@ void UAttractionActorComponent::Raycast()
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
 			{
 				m_AttractedActors.AddUnique(ActorHit);
-				AttractableComponent->StartAttraction(m_ThirdPersonCharacter);
+				AttractableComponent->StartAttraction(GetOwner());
 			}
 		}
 	}
@@ -88,10 +80,8 @@ void UAttractionActorComponent::RaycastTimer()
 {
 	ResetAttractedActors(GetAttractedActors());
 
-	FVector Start = m_ThirdPersonCharacter->GetFollowCamera()->GetComponentLocation();
-	const FVector ForwardVector = m_ThirdPersonCharacter->GetFollowCamera()->GetForwardVector();
-
-	Start = Start + (ForwardVector * m_ThirdPersonCharacter->GetCameraBoom()->TargetArmLength);
+	FVector Start = GetOwner()->GetActorLocation();
+	const FVector ForwardVector = GetOwner()->GetActorForwardVector();
 
 	const FVector End = Start + (ForwardVector * RaycastDistance);
 	FCollisionQueryParams CollisionParams;
@@ -123,7 +113,7 @@ void UAttractionActorComponent::RaycastTimer()
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
 			{
 				m_AttractedActors.AddUnique(ActorHit);
-				AttractableComponent->StartAttraction(m_ThirdPersonCharacter);
+				AttractableComponent->StartAttraction(GetOwner());
 			}
 		}
 	}
@@ -188,7 +178,7 @@ void UAttractionActorComponent::StopAttracting()
 void UAttractionActorComponent::AngleDistanceCalculation()
 {
 	// Get the character's forward vector
-	FVector CharacterForward = m_ThirdPersonCharacter->GetActorForwardVector();
+	FVector CharacterForward = GetOwner()->GetActorForwardVector();
 
 	// Create a list of attracted actors to remove
 	TArray<AActor*> ActorsToRemove;
@@ -199,7 +189,7 @@ void UAttractionActorComponent::AngleDistanceCalculation()
 		if (AttractedActor)
 		{
 			// Calculate the vector pointing from the character to the attracted actor
-			FVector ToActor = AttractedActor->GetActorLocation() - m_ThirdPersonCharacter->GetActorLocation();
+			FVector ToActor = AttractedActor->GetActorLocation() - GetOwner()->GetActorLocation();
 			ToActor.Normalize();
 
 			// Calculate the dot product between the character's forward vector and the vector to the actor

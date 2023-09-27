@@ -7,8 +7,6 @@
 #include "GameFramework/Character.h"
 #include "AttractionActorComponent.generated.h"
 
-class AVisualStudioTestCharacter;
-
 UENUM(BlueprintType)
 enum class EAttractionMode : uint8
 {
@@ -16,6 +14,7 @@ enum class EAttractionMode : uint8
 	ViaAngle UMETA(DisplayName = "Via Angle"),
 	ViaTimer UMETA(DisplayName = "Via Timer")
 };
+
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -63,8 +62,6 @@ public:
 	class UAttractableActorComponent* GetAttractableActorComponent(AActor* Actor) const;
 
 	void ResetAttractedActors(TArray<AActor*>& AttractedActors);
-
-	AVisualStudioTestCharacter* m_ThirdPersonCharacter = nullptr;
 
 	bool GetbIsAttractInputPressed() { return m_bIsAttractInputPressed; }
 	void SetbIsAttractInputPressed(bool bIsAttractInputPressed) { m_bIsAttractInputPressed = bIsAttractInputPressed; }
