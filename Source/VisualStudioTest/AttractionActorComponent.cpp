@@ -34,7 +34,7 @@ void UAttractionActorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (m_bIsAttractInputPressed)
+	if (GetbIsAttractInputPressed())
 	{
 		AngleDistanceCalculation();
 	}
@@ -48,7 +48,7 @@ void UAttractionActorComponent::Raycast()
 
 	Start = Start + (ForwardVector * m_ThirdPersonCharacter->GetCameraBoom()->TargetArmLength);
 
-	const FVector End = Start + (ForwardVector * m_ThirdPersonCharacter->RaycastDistance);
+	const FVector End = Start + (ForwardVector * RaycastDistance);
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(GetOwner());
 
@@ -77,7 +77,7 @@ void UAttractionActorComponent::Raycast()
 
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
 			{
-				m_ThirdPersonCharacter->m_AttractedActors.AddUnique(ActorHit);
+				m_AttractedActors.AddUnique(ActorHit);
 				AttractableComponent->StartAttraction(m_ThirdPersonCharacter);
 			}
 		}
@@ -86,14 +86,14 @@ void UAttractionActorComponent::Raycast()
 
 void UAttractionActorComponent::RaycastTimer()
 {
-	ResetAttractedActors(m_ThirdPersonCharacter->GetAttractedActors());
+	ResetAttractedActors(GetAttractedActors());
 
 	FVector Start = m_ThirdPersonCharacter->GetFollowCamera()->GetComponentLocation();
 	const FVector ForwardVector = m_ThirdPersonCharacter->GetFollowCamera()->GetForwardVector();
 
 	Start = Start + (ForwardVector * m_ThirdPersonCharacter->GetCameraBoom()->TargetArmLength);
 
-	const FVector End = Start + (ForwardVector * m_ThirdPersonCharacter->RaycastDistance);
+	const FVector End = Start + (ForwardVector * RaycastDistance);
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(GetOwner());
 
@@ -122,7 +122,7 @@ void UAttractionActorComponent::RaycastTimer()
 
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(ActorHit))
 			{
-				m_ThirdPersonCharacter->m_AttractedActors.AddUnique(ActorHit);
+				m_AttractedActors.AddUnique(ActorHit);
 				AttractableComponent->StartAttraction(m_ThirdPersonCharacter);
 			}
 		}
@@ -139,14 +139,14 @@ void UAttractionActorComponent::StartAttracting()
 	case EAttractionMode::ViaAngle:
 
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Function Attract Angle System");
-		m_bIsAttractInputPressed = true;
+		SetbIsAttractInputPressed(true);
 		Raycast();
 
 		break;
 	case EAttractionMode::ViaTimer:
 
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Function Attract Timer System");
-		m_bIsAttractInputPressed = true;
+		SetbIsAttractInputPressed(true);
 		GetWorld()->GetTimerManager().SetTimer(RaycastTimerHandle, this, &UAttractionActorComponent::RaycastTimer, RaycastInterval, true);
 
 		break;
@@ -162,9 +162,9 @@ void UAttractionActorComponent::StopAttracting()
 		break;
 	case EAttractionMode::ViaAngle:
 
-		m_bIsAttractInputPressed = false;
+		SetbIsAttractInputPressed(false);
 
-		for (AActor* Actor : m_ThirdPersonCharacter->m_AttractedActors)
+		for (AActor* Actor : m_AttractedActors)
 		{
 			if (UAttractableActorComponent* AttractableComponent = GetAttractableActorComponent(Actor))
 			{
@@ -172,14 +172,14 @@ void UAttractionActorComponent::StopAttracting()
 			}
 		}
 
-		m_ThirdPersonCharacter->m_AttractedActors.Reset();
+		m_AttractedActors.Reset();
 
 		break;
 	case EAttractionMode::ViaTimer:
 
-		m_bIsAttractInputPressed = false;
+		SetbIsAttractInputPressed(false);
 		GetWorld()->GetTimerManager().ClearTimer(RaycastTimerHandle);
-		ResetAttractedActors(m_ThirdPersonCharacter->GetAttractedActors());
+		ResetAttractedActors(GetAttractedActors());
 
 		break;
 	}
@@ -194,7 +194,7 @@ void UAttractionActorComponent::AngleDistanceCalculation()
 	TArray<AActor*> ActorsToRemove;
 
 	// Iterate through the attracted actors
-	for (AActor* AttractedActor : m_ThirdPersonCharacter->m_AttractedActors)
+	for (AActor* AttractedActor : m_AttractedActors)
 	{
 		if (AttractedActor)
 		{
@@ -209,7 +209,7 @@ void UAttractionActorComponent::AngleDistanceCalculation()
 			const float AngleInDegrees = FMath::Acos(DotProduct) * (180.0f / PI);
 
 			// If the angle is greater than the threshold, add the actor to the removal list
-			if (AngleInDegrees > m_ThirdPersonCharacter->ms_MaxAttractingAngle)
+			if (AngleInDegrees > ms_MaxAttractingAngle)
 			{
 				ActorsToRemove.Add(AttractedActor);
 			}
@@ -225,7 +225,7 @@ void UAttractionActorComponent::AngleDistanceCalculation()
 		}
 
 		// Remove the actor from the attracted list
-		m_ThirdPersonCharacter->m_AttractedActors.Remove(ActorToRemove);
+		m_AttractedActors.Remove(ActorToRemove);
 	}
 }
 

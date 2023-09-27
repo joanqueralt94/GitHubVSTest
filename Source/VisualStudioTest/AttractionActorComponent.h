@@ -30,6 +30,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Raycast")
 	float RaycastInterval = 0.8f; 
 
+	UPROPERTY(EditAnywhere, Category = "Raycast")
+	float RaycastDistance = 5000.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Raycast")
+	float ms_MaxAttractingAngle = 30.0f;
+
+	bool m_bIsAttractInputPressed = false;
+
 public:	
 	// Sets default values for this component's properties
 	UAttractionActorComponent();
@@ -58,7 +66,8 @@ public:
 
 	AVisualStudioTestCharacter* m_ThirdPersonCharacter = nullptr;
 
-	bool m_bIsAttractInputPressed = false;
+	bool GetbIsAttractInputPressed() { return m_bIsAttractInputPressed; }
+	void SetbIsAttractInputPressed(bool bIsAttractInputPressed) { m_bIsAttractInputPressed = bIsAttractInputPressed; }
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	EAttractionMode m_CurrentAttractionMode;
@@ -67,5 +76,9 @@ public:
 	void SetAttractionMode(EAttractionMode AttractionMode) { m_CurrentAttractionMode = AttractionMode; }
 
 	void ToggleAttractionMode();
+
+	TArray<AActor*> m_AttractedActors;
+
+	TArray<AActor*>& GetAttractedActors() { return m_AttractedActors; }
 
 };

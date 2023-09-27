@@ -80,28 +80,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	int SpawnDistance = 0;
 
-	//moure propietats de RAycast al nou component
-	UPROPERTY(EditAnywhere, Category = "Raycast")
-	float RaycastDistance = 5000.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Raycast")
-	float ms_MaxAttractingAngle = 30.0f;
-
-	//fins aquí moure propietats
-
 	void SpawnObject();
 
 	virtual void Tick(float DeltaTime) override;
-
-	//Moure al nou component
-	TArray<AActor*> m_AttractedActors;
-
-	TArray<AActor*>& GetAttractedActors() { return m_AttractedActors; }
-
+		
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UAttractionActorComponent* AttractionActorComponent = nullptr;
-
-	//Afegir input Togle per cambiar de modes Timer and Angle en runtime
 
 };
 
