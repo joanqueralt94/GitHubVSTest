@@ -75,10 +75,10 @@ public:
 public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
-	TSubclassOf<AActor> ActorToSpawn;
+	TSubclassOf<AActor> m_ActorToSpawn;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-	int SpawnDistance = 0;
+	int m_SpawnDistance = 0;
 
 	void SpawnObject();
 

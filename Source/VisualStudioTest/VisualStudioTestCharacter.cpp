@@ -158,15 +158,22 @@ void AVisualStudioTestCharacter::SpawnObject()
 	FVector Location;
 	FRotator Rotation; 
 
-	Location = GetActorLocation() + GetActorForwardVector()*SpawnDistance;
+	Location = GetActorLocation() + GetActorForwardVector()*m_SpawnDistance;
 	Rotation = GetActorRotation();
 
 	FActorSpawnParameters SpawnParams;
-	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, Location, Rotation, SpawnParams);
+	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(m_ActorToSpawn, Location, Rotation, SpawnParams);
 
 }
 
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FVector ForwardVector = this->GetActorForwardVector();
+
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, TEXT("Actor location: %s"), *GetActorForwardVector().ToString());
+
+	UE_LOG(LogTemp, Log, TEXT("Actor location: %s"), *ForwardVector.ToString());
+
 }
