@@ -49,17 +49,17 @@ void AMeshActor::Tick(float DeltaTime)
 
 void AMeshActor::OnOverlapBegin(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
+	/*if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, ThirdPersonCharacter->GetName() + "has destroyed" + this->GetName());
 		this->Destroy();
-	}
+	}*/
 }
 
 void AMeshActor::OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
+	/*if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
 	{
 		this->Destroy();
-	}
+	}*/
 }

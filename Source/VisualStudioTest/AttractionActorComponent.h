@@ -79,6 +79,6 @@ public:
 	TArray<AActor*>& GetAttractedActors() { return m_AttractedActors; }
 
 	//Attraction origin toggle (Actor or Camera Component)
-	//Camera component
+	//Camera componentz
 
 };
