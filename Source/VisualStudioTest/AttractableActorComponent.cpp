@@ -49,9 +49,12 @@ void UAttractableActorComponent::Attraction(AActor* OwnerActor, AActor* Attracti
 {
 	check(OwnerActor != nullptr && AttractingActor != nullptr);
 	
+	//Moving Position (No physics approach)
 	FVector AttractVector = AttractingActor->GetActorLocation() - OwnerActor->GetActorLocation();
 	AttractVector = AttractVector.GetSafeNormal();
 	const FVector NewVector = OwnerActor->GetActorLocation() + AttractVector * AttractionSpeed * DeltaTime;
 	OwnerActor->SetActorLocation(NewVector);
+
+
 		
 }

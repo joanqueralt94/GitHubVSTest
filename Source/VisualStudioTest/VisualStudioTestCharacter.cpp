@@ -170,10 +170,4 @@ void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector ForwardVector = this->GetActorForwardVector();
-
-	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, TEXT("Actor location: %s"), *GetActorForwardVector().ToString());
-
-	UE_LOG(LogTemp, Log, TEXT("Actor location: %s"), *ForwardVector.ToString());
-
 }
