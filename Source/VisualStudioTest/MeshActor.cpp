@@ -20,9 +20,9 @@ AMeshActor::AMeshActor()
 	StaticMeshComponent->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
-	CollisionBox->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	CollisionBox->AttachToComponent(StaticMeshComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	CollisionBox->SetGenerateOverlapEvents(true);
-	CollisionBox->SetBoxExtent(FVector(32.f, 32.f, 32.f));
+	CollisionBox->SetBoxExtent(FVector(50.f, 50.f, 50.f));
 	CollisionBox->SetCollisionProfileName("OverlapOnlyPawn");
 	
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AMeshActor::OnOverlapBegin);
