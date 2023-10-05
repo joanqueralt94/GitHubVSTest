@@ -27,11 +27,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (ExposeFunctionCategories = "Mesh,Rendering,Physics,Components|StaticMesh", AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* StaticMeshComponent;
 
 public:
+
+	UStaticMeshComponent* GetStaticMeshComponent() { return StaticMeshComponent; }
 
 	AVisualStudioTestCharacter* ThirdPersonCharacter;
 
