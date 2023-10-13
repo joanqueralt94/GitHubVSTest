@@ -48,21 +48,24 @@ void UAttractableActorComponent::StartAttraction(AActor* AttractingActor)
 void UAttractableActorComponent::Attraction(AActor* OwnerActor, AActor* AttractingActor, float DeltaTime, float AttractionSpeed)
 {
 	check(OwnerActor != nullptr && AttractingActor != nullptr);
-			
-	//Moving Position with Forces and Physics
-	FVector AttractVector = AttractingActor->GetActorLocation() - OwnerActor->GetActorLocation();
-	AttractVector = AttractVector.GetSafeNormal();
 
-	FVector AttractionForceVector = AttractVector * AttractionSpeed;
+    // Calculate the direction from OwnerActor to AttractingActor.
+    FVector AttractVector = AttractingActor->GetActorLocation() - OwnerActor->GetActorLocation();
+    AttractVector = AttractVector.GetSafeNormal();
 
-	UPrimitiveComponent* PrimitiveRootComponent = Cast<UPrimitiveComponent>(OwnerActor->GetComponentByClass(UStaticMeshComponent::StaticClass()));
-		
-	if (PrimitiveRootComponent)
-	{
-		PrimitiveRootComponent->AddForce(AttractionForceVector, NAME_None, true); 
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "OwnerRootComponent is null for the attracted actor");
-	}
+    // Calculate the attraction force vector.
+    FVector AttractionForceVector = AttractVector * AttractionSpeed;
+
+    // Assuming the root component of the owner actor is a UPrimitiveComponent.
+    UPrimitiveComponent* PrimitiveRootComponent = Cast<UPrimitiveComponent>(OwnerActor->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+
+    if (PrimitiveRootComponent)
+    {
+        // Apply the force to the root component.
+        PrimitiveRootComponent->AddForce(AttractionForceVector, NAME_None, true);
+    }
+    else
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "OwnerRootComponent is null for the attracted actor");
+    }
 }

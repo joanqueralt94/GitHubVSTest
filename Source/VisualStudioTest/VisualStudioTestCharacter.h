@@ -80,12 +80,16 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	int m_SpawnDistance = 0;
 
+	UPROPERTY(EditAnywhere, Category = "Game")
+	int m_GoalScore;
+
 	void SpawnObject();
+
+	void ShowScore();
 
 	virtual void Tick(float DeltaTime) override;
 		
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UAttractionActorComponent* AttractionActorComponent = nullptr;
-
 };
 

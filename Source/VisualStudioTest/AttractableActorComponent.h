@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Attraction")
 	float AttractSpeed = 200.f;
 
+	UPROPERTY(EditAnywhere, Category = "Attraction")
+	float m_StoppingForceMultiplier = 200.f;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

@@ -18,6 +18,7 @@ AMeshActor::AMeshActor()
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponentName");
 	StaticMeshComponent->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	StaticMeshComponent->OnComponentHit.AddDynamic(this, &AMeshActor::OnMeshActorHit);
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	CollisionBox->AttachToComponent(StaticMeshComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -29,7 +30,6 @@ AMeshActor::AMeshActor()
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AMeshActor::OnOverlapEnd);
 
 	AttractableActorComp = CreateDefaultSubobject<UAttractableActorComponent>(TEXT("AttractableActorComponent"));
-
 }
 
 // Called when the game starts or when spawned
@@ -61,4 +61,17 @@ void AMeshActor::OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	{
 		
 	}
+}
+
+void AMeshActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor != ThirdPersonCharacter)
+	{
+		FVector CurrentVelocity = StaticMeshComponent->GetComponentVelocity();
+
+		FVector OpposingForce = -CurrentVelocity;
+		StaticMeshComponent->AddForce(OpposingForce, NAME_None, true);
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "COLLIDED");
+	}
+	else GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "COLLIDED WITH PLAYER");
 }

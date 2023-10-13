@@ -69,6 +69,8 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("ToggleAttractionMode", IE_Pressed, AttractionActorComponent, &UAttractionActorComponent::ToggleAttractionMode);
 
 	PlayerInputComponent->BindAction("Spawn", IE_Pressed, this, &AVisualStudioTestCharacter::SpawnObject);
+	PlayerInputComponent->BindAction("Score", IE_Pressed, this, &AVisualStudioTestCharacter::ShowScore);
+
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AVisualStudioTestCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AVisualStudioTestCharacter::MoveRight);
@@ -163,6 +165,12 @@ void AVisualStudioTestCharacter::SpawnObject()
 	FActorSpawnParameters SpawnParams;
 	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(m_ActorToSpawn, Location, Rotation, SpawnParams);
 
+}
+
+void AVisualStudioTestCharacter::ShowScore()
+{
+	FString ScoreMessage = FString::Printf(TEXT("Score Player is %d"), m_GoalScore);
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, ScoreMessage);
 }
 
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
