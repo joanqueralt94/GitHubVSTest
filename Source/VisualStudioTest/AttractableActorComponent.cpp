@@ -62,7 +62,7 @@ void UAttractableActorComponent::Attraction(AActor* OwnerActor, AActor* Attracti
     if (PrimitiveRootComponent)
     {
         // Apply the force to the root component.
-        PrimitiveRootComponent->AddForce(AttractionForceVector, NAME_None, true);
+		PrimitiveRootComponent->AddForce(AttractionForceVector, NAME_None, true);
     }
     else
     {

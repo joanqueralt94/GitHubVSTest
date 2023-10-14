@@ -24,6 +24,12 @@ class AVisualStudioTestCharacter : public ACharacter
 public:
 	AVisualStudioTestCharacter();
 
+protected:
+	
+	virtual void BeginPlay() override;
+
+public:
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -83,9 +89,19 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Game")
 	int m_GoalScore;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	TArray<TSubclassOf<AActor>> InventoryArray;
+
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	int InventorySize = 0;
+
 	void SpawnObject();
 
 	void ShowScore();
+
+	void DropActor();
+
+	void PickUpActor();
 
 	virtual void Tick(float DeltaTime) override;
 		

@@ -67,11 +67,14 @@ void AMeshActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* Other
 {
 	if (OtherActor != ThirdPersonCharacter)
 	{
-		FVector CurrentVelocity = StaticMeshComponent->GetComponentVelocity();
+		/*FVector CurrentVelocity = StaticMeshComponent->GetComponentVelocity();
 
 		FVector OpposingForce = -CurrentVelocity;
-		StaticMeshComponent->AddForce(OpposingForce, NAME_None, true);
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "COLLIDED");
+		StaticMeshComponent->AddForce(OpposingForce, NAME_None, true);*/
+		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "COLLIDED");
 	}
-	else GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "COLLIDED WITH PLAYER");
+	else
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "COLLIDED WITH PLAYER");
+	}
 }

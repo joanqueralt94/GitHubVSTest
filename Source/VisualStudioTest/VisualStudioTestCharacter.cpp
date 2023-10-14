@@ -52,6 +52,19 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	AttractionActorComponent = CreateDefaultSubobject<UAttractionActorComponent>(TEXT("AttractionActorComponent"));
+	InventoryArray.SetNum(InventorySize);
+}
+
+void AVisualStudioTestCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+
+	for (int32 i = 0; i < InventoryArray.Num(); i++)
+	{
+		SpawnObject();
+	}
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,6 +83,8 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 
 	PlayerInputComponent->BindAction("Spawn", IE_Pressed, this, &AVisualStudioTestCharacter::SpawnObject);
 	PlayerInputComponent->BindAction("Score", IE_Pressed, this, &AVisualStudioTestCharacter::ShowScore);
+	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AVisualStudioTestCharacter::DropActor);
+	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AVisualStudioTestCharacter::PickUpActor);
 
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AVisualStudioTestCharacter::MoveForward);
@@ -171,6 +186,16 @@ void AVisualStudioTestCharacter::ShowScore()
 {
 	FString ScoreMessage = FString::Printf(TEXT("Score Player is %d"), m_GoalScore);
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, ScoreMessage);
+}
+
+void AVisualStudioTestCharacter::DropActor()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, "Drop Actor Function Called");
+}
+
+void AVisualStudioTestCharacter::PickUpActor()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Pick Up Actor Function Called");
 }
 
 void AVisualStudioTestCharacter::Tick(float DeltaTime)

@@ -128,14 +128,14 @@ void UAttractionActorComponent::StartAttracting()
 		break;
 	case EAttractionMode::ViaAngle:
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Function Attract Angle System");
+		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Function Attract Angle System");
 		SetbIsAttractInputPressed(true);
 		Raycast();
 
 		break;
 	case EAttractionMode::ViaTimer:
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Function Attract Timer System");
+		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Function Attract Timer System");
 		SetbIsAttractInputPressed(true);
 		GetWorld()->GetTimerManager().SetTimer(RaycastTimerHandle, this, &UAttractionActorComponent::RaycastTimer, RaycastInterval, true);
 
@@ -248,11 +248,11 @@ void UAttractionActorComponent::ToggleAttractionMode()
 	if (GetAttractionMode() == EAttractionMode::ViaAngle)
 	{
 		SetAttractionMode(EAttractionMode::ViaTimer);
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Toggled to Timer Mode");
+		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Toggled to Timer Mode");
 	}
 	else
 	{
 		SetAttractionMode(EAttractionMode::ViaAngle);
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Toggled to Angle Mode");
+		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Toggled to Angle Mode");
 	}
 }
