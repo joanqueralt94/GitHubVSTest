@@ -5,7 +5,7 @@
 #include "kismet/gameplaystatics.h"
 
 // Sets default values
-AInvetoryActor::AInvetoryActor()
+AInventoryActor::AInventoryActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -15,7 +15,7 @@ AInvetoryActor::AInvetoryActor()
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponentName");
 	StaticMeshComponent->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	StaticMeshComponent->OnComponentHit.AddDynamic(this, &AInvetoryActor::OnMeshActorHit);
+	StaticMeshComponent->OnComponentHit.AddDynamic(this, &AInventoryActor::OnMeshActorHit);
 	StaticMeshComponent->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Game/Geometry/Meshes/1M_Cube.1M_Cube"));
@@ -33,7 +33,7 @@ AInvetoryActor::AInvetoryActor()
 }
 
 // Called when the game starts or when spawned
-void AInvetoryActor::BeginPlay()
+void AInventoryActor::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -43,13 +43,13 @@ void AInvetoryActor::BeginPlay()
 }
 
 // Called every frame
-void AInvetoryActor::Tick(float DeltaTime)
+void AInventoryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void AInvetoryActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AInventoryActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (OtherActor == ThirdPersonCharacter)
 	{

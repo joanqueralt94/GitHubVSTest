@@ -8,13 +8,13 @@
 #include "InventoryActor.generated.h"
 
 UCLASS()
-class VISUALSTUDIOTEST_API AInvetoryActor : public AActor
+class VISUALSTUDIOTEST_API AInventoryActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AInvetoryActor();
+	AInventoryActor();
 
 protected:
 	// Called when the game starts or when spawned

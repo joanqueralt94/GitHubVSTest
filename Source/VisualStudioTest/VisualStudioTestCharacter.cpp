@@ -65,7 +65,7 @@ void AVisualStudioTestCharacter::BeginPlay()
 		FRotator Rotation = GetActorRotation();
 
 		FActorSpawnParameters SpawnParams;
-		UClass* InventoryActorClass = AInvetoryActor::StaticClass();
+		UClass* InventoryActorClass = AInventoryActor::StaticClass();
 		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(InventoryActorClass, Location, Rotation, SpawnParams);
 		SpawnedActorRef->SetActorHiddenInGame(true);
 		m_ActorsInInventory.Push(SpawnedActorRef);
