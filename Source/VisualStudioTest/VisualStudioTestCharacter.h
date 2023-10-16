@@ -92,6 +92,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	TArray<AActor*> m_ActorsInInventory;
 
+	TArray<AActor*> m_ActorsDropped;
+
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	int m_InventorySize = 0;
 

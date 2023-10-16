@@ -194,20 +194,39 @@ void AVisualStudioTestCharacter::ShowScore()
 
 void AVisualStudioTestCharacter::DropActor()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, "Drop Actor Function Called");
-	if (!m_ActorsInInventory.IsEmpty())
+	if (m_ActorsInInventory.Num() == 0)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "INVENTORY IS EMPTY");
+	}
+	else
+	{
+		AActor* TempInventoryActor = m_ActorsInInventory[0];
 
+		FVector TempInvetoryLocation = GetActorLocation() + GetActorForwardVector() * m_SpawnDistance;
+
+		TempInventoryActor->SetActorLocation(TempInvetoryLocation);
+		TempInventoryActor->SetActorHiddenInGame(false);
+		m_ActorsInInventory.RemoveAt(0);
+		m_ActorsDropped.Push(TempInventoryActor);
 	}
 }
 
 void AVisualStudioTestCharacter::PickUpActor()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, "Pick Up Actor Function Called");
+	if (m_ActorsInInventory.Num() < m_InventorySize)
+	{
+		AActor* TempInventoryActor = m_ActorsDropped[0];
+		TempInventoryActor->SetActorHiddenInGame(true);
+		m_ActorsDropped.RemoveAt(0);
+		m_ActorsInInventory.Push(TempInventoryActor);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "INVENTORY IS FULL");
+	}
 }
 
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
