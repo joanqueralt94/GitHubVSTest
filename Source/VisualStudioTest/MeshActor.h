@@ -34,7 +34,7 @@ public:
 
 	UStaticMeshComponent* GetStaticMeshComponent() { return StaticMeshComponent; }
 
-	AVisualStudioTestCharacter* ThirdPersonCharacter;
+	//AVisualStudioTestCharacter* ThirdPersonCharacter;
 
 	UPROPERTY()
 	USceneComponent* DefaultRootComponent;

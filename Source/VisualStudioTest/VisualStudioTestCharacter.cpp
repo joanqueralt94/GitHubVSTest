@@ -61,7 +61,7 @@ void AVisualStudioTestCharacter::BeginPlay()
 
 	for (int32 i = 0; i < m_InventorySize; i++)
 	{
-		FVector Location = GetActorLocation() + GetActorForwardVector() * m_SpawnDistance;
+		FVector Location = FVector::ZeroVector;
 		FRotator Rotation = GetActorRotation();
 
 		FActorSpawnParameters SpawnParams;
@@ -176,9 +176,9 @@ void AVisualStudioTestCharacter::MoveRight(float Value)
 void AVisualStudioTestCharacter::SpawnObject()
 {
 	FVector Location;
-	FRotator Rotation; 
+	FRotator Rotation;
 
-	Location = GetActorLocation() + GetActorForwardVector()*m_SpawnDistance;
+	Location = GetActorLocation() + GetActorForwardVector() * m_SpawnDistance;
 	Rotation = GetActorRotation();
 
 	FActorSpawnParameters SpawnParams;
@@ -215,6 +215,8 @@ void AVisualStudioTestCharacter::PickUpActor()
 	if (m_ActorsInInventory.Num() < m_InventorySize)
 	{
 		AActor* TempInventoryActor = m_ActorsDropped[0];
+		FVector Location = FVector::ZeroVector;
+		TempInventoryActor->SetActorLocation(Location);
 		TempInventoryActor->SetActorHiddenInGame(true);
 		m_ActorsDropped.RemoveAt(0);
 		m_ActorsInInventory.Push(TempInventoryActor);

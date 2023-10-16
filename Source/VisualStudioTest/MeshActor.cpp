@@ -39,7 +39,7 @@ void AMeshActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	//ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 }
 
@@ -51,32 +51,32 @@ void AMeshActor::Tick(float DeltaTime)
 
 void AMeshActor::OnOverlapBegin(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
-	{
-		//StaticMeshComponent->SetSimulatePhysics(false);
-	}
+	//if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
+	//{
+	//	//StaticMeshComponent->SetSimulatePhysics(false);
+	//}
 }
 
 void AMeshActor::OnOverlapEnd(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
+	/*if (ThirdPersonCharacter && ThirdPersonCharacter == OtherActor)
 	{
-		
-	}
+
+	}*/
 }
 
 void AMeshActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor != ThirdPersonCharacter)
-	{
-		/*FVector CurrentVelocity = StaticMeshComponent->GetComponentVelocity();
+	//if (OtherActor != ThirdPersonCharacter)
+	//{
+	//	/*FVector CurrentVelocity = StaticMeshComponent->GetComponentVelocity();
 
-		FVector OpposingForce = -CurrentVelocity;
-		StaticMeshComponent->AddForce(OpposingForce, NAME_None, true);*/
-		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "COLLIDED");
-	}
-	else
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "COLLIDED WITH PLAYER");
-	}
+	//	FVector OpposingForce = -CurrentVelocity;
+	//	StaticMeshComponent->AddForce(OpposingForce, NAME_None, true);*/
+	//	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "COLLIDED");
+	//}
+	//else
+	//{
+	//	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "COLLIDED WITH PLAYER");
+	//}
 }
