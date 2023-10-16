@@ -90,10 +90,10 @@ public:
 	int m_GoalScore;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
-	TArray<TSubclassOf<AActor>> InventoryArray;
+	TArray<AActor*> m_ActorsInInventory;
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
-	int InventorySize = 0;
+	int m_InventorySize = 0;
 
 	void SpawnObject();
 

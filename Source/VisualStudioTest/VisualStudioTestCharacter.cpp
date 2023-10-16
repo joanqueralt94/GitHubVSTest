@@ -11,6 +11,7 @@
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
 #include "MeshActor.h"
+#include "InvetoryActor.h"
 #include "AttractableActorComponent.h"
 #include "AttractionActorComponent.h"
 
@@ -52,19 +53,23 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	AttractionActorComponent = CreateDefaultSubobject<UAttractionActorComponent>(TEXT("AttractionActorComponent"));
-	InventoryArray.SetNum(InventorySize);
 }
 
 void AVisualStudioTestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-
-	for (int32 i = 0; i < InventoryArray.Num(); i++)
+	for (int32 i = 0; i < m_InventorySize; i++)
 	{
-		SpawnObject();
-	}
+		FVector Location = GetActorLocation() + GetActorForwardVector() * m_SpawnDistance;
+		FRotator Rotation = GetActorRotation();
 
+		FActorSpawnParameters SpawnParams;
+		UClass* InvetoryActorClass = AInvetoryActor::StaticClass();
+		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(InvetoryActorClass, Location, Rotation, SpawnParams);
+		SpawnedActorRef->SetActorHiddenInGame(true);
+		m_ActorsInInventory.Push(SpawnedActorRef);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -179,7 +184,6 @@ void AVisualStudioTestCharacter::SpawnObject()
 
 	FActorSpawnParameters SpawnParams;
 	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(m_ActorToSpawn, Location, Rotation, SpawnParams);
-
 }
 
 void AVisualStudioTestCharacter::ShowScore()
@@ -191,6 +195,10 @@ void AVisualStudioTestCharacter::ShowScore()
 void AVisualStudioTestCharacter::DropActor()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Emerald, "Drop Actor Function Called");
+	if (!m_ActorsInInventory.IsEmpty())
+	{
+
+	}
 }
 
 void AVisualStudioTestCharacter::PickUpActor()

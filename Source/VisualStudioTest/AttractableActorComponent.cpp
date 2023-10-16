@@ -51,7 +51,9 @@ void UAttractableActorComponent::Attraction(AActor* OwnerActor, AActor* Attracti
 
     // Calculate the direction from OwnerActor to AttractingActor.
     FVector AttractVector = AttractingActor->GetActorLocation() - OwnerActor->GetActorLocation();
-    AttractVector = AttractVector.GetSafeNormal();
+	FString Message = OwnerActor->GetActorLocation().ToString();
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Actor Position is" + Message);
+	AttractVector = AttractVector.GetSafeNormal();
 
     // Calculate the attraction force vector.
     FVector AttractionForceVector = AttractVector * AttractionSpeed;

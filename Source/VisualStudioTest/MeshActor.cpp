@@ -19,6 +19,7 @@ AMeshActor::AMeshActor()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponentName");
 	StaticMeshComponent->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	StaticMeshComponent->OnComponentHit.AddDynamic(this, &AMeshActor::OnMeshActorHit);
+	StaticMeshComponent->SetSimulatePhysics(true);
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	CollisionBox->AttachToComponent(StaticMeshComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -30,6 +31,7 @@ AMeshActor::AMeshActor()
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AMeshActor::OnOverlapEnd);
 
 	AttractableActorComp = CreateDefaultSubobject<UAttractableActorComponent>(TEXT("AttractableActorComponent"));
+
 }
 
 // Called when the game starts or when spawned
