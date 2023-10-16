@@ -11,7 +11,7 @@
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
 #include "MeshActor.h"
-#include "InvetoryActor.h"
+#include "InventoryActor.h"
 #include "AttractableActorComponent.h"
 #include "AttractionActorComponent.h"
 
@@ -65,8 +65,8 @@ void AVisualStudioTestCharacter::BeginPlay()
 		FRotator Rotation = GetActorRotation();
 
 		FActorSpawnParameters SpawnParams;
-		UClass* InvetoryActorClass = AInvetoryActor::StaticClass();
-		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(InvetoryActorClass, Location, Rotation, SpawnParams);
+		UClass* InventoryActorClass = AInvetoryActor::StaticClass();
+		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(InventoryActorClass, Location, Rotation, SpawnParams);
 		SpawnedActorRef->SetActorHiddenInGame(true);
 		m_ActorsInInventory.Push(SpawnedActorRef);
 	}
@@ -172,7 +172,6 @@ void AVisualStudioTestCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
-
 
 void AVisualStudioTestCharacter::SpawnObject()
 {

@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "InvetoryActor.h"
+#include "InventoryActor.h"
+#include "kismet/gameplaystatics.h"
 
 // Sets default values
 AInvetoryActor::AInvetoryActor()
@@ -14,6 +15,8 @@ AInvetoryActor::AInvetoryActor()
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponentName");
 	StaticMeshComponent->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	StaticMeshComponent->OnComponentHit.AddDynamic(this, &AInvetoryActor::OnMeshActorHit);
+	StaticMeshComponent->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Game/Geometry/Meshes/1M_Cube.1M_Cube"));
 
@@ -27,13 +30,15 @@ AInvetoryActor::AInvetoryActor()
 		UE_LOG(LogTemp, Warning, TEXT("Error Loading Static Mesh"));
 	}
 
-
 }
 
 // Called when the game starts or when spawned
 void AInvetoryActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 	
 }
 
@@ -42,5 +47,13 @@ void AInvetoryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AInvetoryActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor == ThirdPersonCharacter)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Collided With Player"));
+	}
 }
 
