@@ -16,7 +16,7 @@ AInventoryActor::AInventoryActor()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponentName");
 	StaticMeshComponent->AttachToComponent(DefaultRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	StaticMeshComponent->OnComponentHit.AddDynamic(this, &AInventoryActor::OnMeshActorHit);
-	StaticMeshComponent->SetCollisionProfileName(TEXT("OverlapAll"));
+	StaticMeshComponent->SetCollisionProfileName(TEXT("BlockAll"));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Game/Geometry/Meshes/1M_Cube.1M_Cube"));
 
@@ -46,7 +46,6 @@ void AInventoryActor::BeginPlay()
 void AInventoryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AInventoryActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

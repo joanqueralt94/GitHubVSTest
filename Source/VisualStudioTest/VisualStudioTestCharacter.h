@@ -28,6 +28,8 @@ protected:
 	
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EEndPlayReason) override;
+
 public:
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -109,5 +111,16 @@ public:
 		
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UAttractionActorComponent* AttractionActorComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UPlayerHUD> PlayerHUDClass;
+
+	UPROPERTY()
+	class UPlayerHUD* PlayerHUD;
+
+	float Health = 100;
+	float MaxHealth = 100;
+
+	bool bGameEnded = false;
 };
 

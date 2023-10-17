@@ -10,10 +10,13 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 #include "MeshActor.h"
 #include "InventoryActor.h"
 #include "AttractableActorComponent.h"
 #include "AttractionActorComponent.h"
+#include "PlayerHUD.h"
+#include "Blueprint/UserWidget.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -53,11 +56,23 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	AttractionActorComponent = CreateDefaultSubobject<UAttractionActorComponent>(TEXT("AttractionActorComponent"));
+
+	PlayerHUDClass = nullptr;
+	PlayerHUD = nullptr;
 }
 
 void AVisualStudioTestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
+	if (PlayerHUDClass)
+	{
+		PlayerHUD = CreateWidget<UPlayerHUD>(PlayerController, PlayerHUDClass);
+		check(PlayerHUD);
+		PlayerHUD->AddToPlayerScreen();
+	}
 
 	for (int32 i = 0; i < m_InventorySize; i++)
 	{
@@ -70,6 +85,17 @@ void AVisualStudioTestCharacter::BeginPlay()
 		SpawnedActorRef->SetActorHiddenInGame(true);
 		m_ActorsInInventory.Push(SpawnedActorRef);
 	}
+}
+
+void AVisualStudioTestCharacter::EndPlay(const EEndPlayReason::Type EEndPlayReason)
+{
+	if (PlayerHUD)
+	{
+		PlayerHUD->RemoveFromParent();
+		PlayerHUD = nullptr;
+	}
+
+	Super::EndPlay(EEndPlayReason);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -207,6 +233,7 @@ void AVisualStudioTestCharacter::DropActor()
 		TempInventoryActor->SetActorHiddenInGame(false);
 		m_ActorsInInventory.RemoveAt(0);
 		m_ActorsDropped.Push(TempInventoryActor);
+
 	}
 }
 
@@ -220,6 +247,16 @@ void AVisualStudioTestCharacter::PickUpActor()
 		TempInventoryActor->SetActorHiddenInGame(true);
 		m_ActorsDropped.RemoveAt(0);
 		m_ActorsInInventory.Push(TempInventoryActor);
+
+
+		Health = Health - 20;
+		PlayerHUD->SetHealth(Health, MaxHealth);
+
+		if (Health == 0)
+		{
+			bGameEnded = true;
+			PlayerHUD->ShowGameOverText(bGameEnded);
+		}
 	}
 	else
 	{
