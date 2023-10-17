@@ -16,6 +16,8 @@ class VISUALSTUDIOTEST_API UPlayerHUD : public UUserWidget
 	
 public:
 
+	void SetInventoryCountNumber(int InventoryNumber);
+
 	void SetHealth(float CurrentHealth, float MaxHealth);
 
 	void ShowGameOverText(bool bGameEnded);
@@ -25,5 +27,11 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* GameOverText;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* InventoryCountText;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* InventoryCountNumber;
 
 };

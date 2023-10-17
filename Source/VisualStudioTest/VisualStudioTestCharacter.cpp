@@ -85,6 +85,8 @@ void AVisualStudioTestCharacter::BeginPlay()
 		SpawnedActorRef->SetActorHiddenInGame(true);
 		m_ActorsInInventory.Push(SpawnedActorRef);
 	}
+
+	PlayerHUD->SetInventoryCountNumber(m_ActorsInInventory.Num());
 }
 
 void AVisualStudioTestCharacter::EndPlay(const EEndPlayReason::Type EEndPlayReason)
@@ -233,7 +235,16 @@ void AVisualStudioTestCharacter::DropActor()
 		TempInventoryActor->SetActorHiddenInGame(false);
 		m_ActorsInInventory.RemoveAt(0);
 		m_ActorsDropped.Push(TempInventoryActor);
+		PlayerHUD->SetInventoryCountNumber(m_ActorsInInventory.Num());
 
+		Health = Health - 20;
+		PlayerHUD->SetHealth(Health, MaxHealth);
+
+		if (Health == 0)
+		{
+			bGameEnded = true;
+			PlayerHUD->ShowGameOverText(bGameEnded);
+		}
 	}
 }
 
@@ -248,15 +259,12 @@ void AVisualStudioTestCharacter::PickUpActor()
 		m_ActorsDropped.RemoveAt(0);
 		m_ActorsInInventory.Push(TempInventoryActor);
 
+		PlayerHUD->SetInventoryCountNumber(m_ActorsInInventory.Num());
 
-		Health = Health - 20;
+
+		Health = Health + 20;
 		PlayerHUD->SetHealth(Health, MaxHealth);
-
-		if (Health == 0)
-		{
-			bGameEnded = true;
-			PlayerHUD->ShowGameOverText(bGameEnded);
-		}
+	
 	}
 	else
 	{

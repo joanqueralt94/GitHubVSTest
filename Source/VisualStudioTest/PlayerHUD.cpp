@@ -5,6 +5,16 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
+void UPlayerHUD::SetInventoryCountNumber(int InventoryNumber)
+{
+	FString InventoryNumberString = FString::Printf(TEXT("%d"), InventoryNumber);
+
+	if (InventoryCountNumber)
+	{
+		InventoryCountNumber->SetText(FText::FromString(InventoryNumberString));
+	}
+}
+
 void UPlayerHUD::SetHealth(float CurrentHealth, float MaxHealth)
 {
 	if (HealthBar)
