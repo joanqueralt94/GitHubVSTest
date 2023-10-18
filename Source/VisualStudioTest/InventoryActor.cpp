@@ -29,7 +29,6 @@ AInventoryActor::AInventoryActor()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Error Loading Static Mesh"));
 	}
-
 }
 
 // Called when the game starts or when spawned
@@ -46,9 +45,6 @@ void AInventoryActor::Tick(float DeltaTime)
 
 void AInventoryActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	/*if (OtherActor == ThirdPersonCharacter)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Collided With Player"));
-	}*/
+	
 }
 

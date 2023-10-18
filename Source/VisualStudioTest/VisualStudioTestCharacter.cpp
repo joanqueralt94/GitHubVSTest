@@ -9,13 +9,8 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/Engine.h"
-#include "DrawDebugHelpers.h"
-#include "Kismet/GameplayStatics.h"
-#include "MeshActor.h"
-#include "InventoryActor.h"
-#include "AttractableActorComponent.h"
+#include "InventoryComponent.h"
 #include "AttractionActorComponent.h"
-#include "PlayerHUD.h"
 #include "Blueprint/UserWidget.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,53 +47,21 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
+	// Note: The skeletal mesh and animation blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	AttractionActorComponent = CreateDefaultSubobject<UAttractionActorComponent>(TEXT("AttractionActorComponent"));
-
-	PlayerHUDClass = nullptr;
-	PlayerHUD = nullptr;
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 }
 
 void AVisualStudioTestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-
-	if (PlayerHUDClass)
-	{
-		PlayerHUD = CreateWidget<UPlayerHUD>(PlayerController, PlayerHUDClass);
-		check(PlayerHUD);
-		PlayerHUD->AddToPlayerScreen();
-	}
-
-	for (int32 i = 0; i < m_InventorySize; i++)
-	{
-		FVector Location = FVector::ZeroVector;
-		FRotator Rotation = GetActorRotation();
-
-		FActorSpawnParameters SpawnParams;
-		UClass* InventoryActorClass = AInventoryActor::StaticClass();
-		AInventoryActor* SpawnedActorRef = GetWorld()->SpawnActor<AInventoryActor>(InventoryActorClass, Location, Rotation, SpawnParams);
-		SpawnedActorRef->SetActorHiddenInGame(true);
-		m_ActorsInInventory.Push(SpawnedActorRef);
-		SpawnedActorRef->SetIsInInventory(true);
-		m_CountInInventory++;
-	}
-
-	PlayerHUD->SetInventoryCountNumber(m_CountInInventory);
 }
 
 void AVisualStudioTestCharacter::EndPlay(const EEndPlayReason::Type EEndPlayReason)
 {
-	if (PlayerHUD)
-	{
-		PlayerHUD->RemoveFromParent();
-		PlayerHUD = nullptr;
-	}
-
 	Super::EndPlay(EEndPlayReason);
 }
 
@@ -118,8 +81,8 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 
 	PlayerInputComponent->BindAction("Spawn", IE_Pressed, this, &AVisualStudioTestCharacter::SpawnObject);
 	PlayerInputComponent->BindAction("Score", IE_Pressed, this, &AVisualStudioTestCharacter::ShowScore);
-	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AVisualStudioTestCharacter::DropActor);
-	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AVisualStudioTestCharacter::PickUpActor);
+	PlayerInputComponent->BindAction("Drop", IE_Pressed, InventoryComponent, &UInventoryComponent::DropActor);
+	PlayerInputComponent->BindAction("PickUp", IE_Pressed, InventoryComponent, &UInventoryComponent::PickUpActor);
 
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AVisualStudioTestCharacter::MoveForward);
@@ -127,7 +90,7 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
-	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
+	// "turn-rate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("TurnRate", this, &AVisualStudioTestCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
@@ -221,82 +184,7 @@ void AVisualStudioTestCharacter::ShowScore()
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, ScoreMessage);
 }
 
-void AVisualStudioTestCharacter::DropActor()
-{
-	if (m_ActorsInInventory.Num() == 0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "INVENTORY IS EMPTY");
-	}
-	else
-	{
-		for (int i = 0; i < m_ActorsInInventory.Num(); i++)
-		{
-			if (m_ActorsInInventory[i]->GetIsInInventory())
-			{
-				FVector TempInvetoryLocation = GetActorLocation() + GetActorForwardVector() * m_SpawnDistance;
-
-				m_ActorsInInventory[i]->SetActorLocation(TempInvetoryLocation);
-				m_ActorsInInventory[i]->SetActorHiddenInGame(false);
-				m_ActorsInInventory[i]->SetIsInInventory(false);
-				m_CountInInventory--;
-				break;
-			}
-		}
-		
-		PlayerHUD->SetInventoryCountNumber(m_CountInInventory);
-
-		Health = Health - 20;
-		PlayerHUD->SetHealth(Health, MaxHealth);
-
-		if (Health == 0)
-		{
-			bGameEnded = true;
-			PlayerHUD->ShowGameOverText(bGameEnded);
-			StartFinishLevelTimer(2.0f);
-		}
-	}
-}
-
-void AVisualStudioTestCharacter::PickUpActor()
-{
-	if (m_CountInInventory < m_InventorySize)
-	{
-		for (int i = 0; i < m_ActorsInInventory.Num(); i++)
-		{
-			if (!m_ActorsInInventory[i]->GetIsInInventory())
-			{
-				FVector Location = FVector::ZeroVector;
-				m_ActorsInInventory[i]->SetActorLocation(Location);
-				m_ActorsInInventory[i]->SetActorHiddenInGame(true);
-				m_ActorsInInventory[i]->SetIsInInventory(true);
-				m_CountInInventory++;
-				break;
-			}
-		}
-		
-		PlayerHUD->SetInventoryCountNumber(m_CountInInventory);
-
-		Health = Health + 20;
-		PlayerHUD->SetHealth(Health, MaxHealth);
-	
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "INVENTORY IS FULL");
-	}
-}
-
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
-
-void AVisualStudioTestCharacter::FinishLevel()
-{
-	UKismetSystemLibrary::QuitGame(GetWorld(), UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Type::Quit, false);
-}
-
-void AVisualStudioTestCharacter::StartFinishLevelTimer(float DelayInSeconds)
-{
-	GetWorld()->GetTimerManager().SetTimer(FinishLevelTimerHandle, this, &AVisualStudioTestCharacter::FinishLevel, DelayInSeconds, false);
 }

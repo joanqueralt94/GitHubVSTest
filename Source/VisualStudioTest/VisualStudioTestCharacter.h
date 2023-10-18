@@ -7,7 +7,7 @@
 #include "AttractionActorComponent.h"
 #include "VisualStudioTestCharacter.generated.h"
 
-class AInventoryActor;
+class UInventoryComponent;
 class UAttractionActorComponent;
 
 UCLASS(config=Game)
@@ -92,42 +92,16 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Game")
 	int m_GoalScore;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
-	TArray<AInventoryActor*> m_ActorsInInventory;
-
-	UPROPERTY(EditAnywhere, Category = "Inventory")
-	int m_InventorySize = 0;
-
-	UPROPERTY(EditAnywhere, Category = "Inventory")
-	int m_CountInInventory = 0;
-
-	void SpawnObject();
-
-	void ShowScore();
-
-	void DropActor();
-
-	void PickUpActor();
-
 	virtual void Tick(float DeltaTime) override;
 		
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UAttractionActorComponent* AttractionActorComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<class UPlayerHUD> PlayerHUDClass;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UInventoryComponent* InventoryComponent = nullptr;
 
-	UPROPERTY()
-	class UPlayerHUD* PlayerHUD;
+	void SpawnObject();
 
-	float Health = 100;
-	float MaxHealth = 100;
+	void ShowScore();
 
-	bool bGameEnded = false;
-
-	FTimerHandle FinishLevelTimerHandle;
-
-	void FinishLevel();
-
-	void StartFinishLevelTimer(float DelayInSeconds);
 };

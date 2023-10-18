@@ -42,5 +42,4 @@ private:
 public:
 	bool GetIsInInventory() { return bIsInInventory; }
 	void SetIsInInventory(bool bValue) { bIsInInventory = bValue; }
-
 };
