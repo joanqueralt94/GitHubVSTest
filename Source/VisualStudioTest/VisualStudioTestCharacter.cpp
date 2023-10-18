@@ -252,6 +252,7 @@ void AVisualStudioTestCharacter::DropActor()
 		{
 			bGameEnded = true;
 			PlayerHUD->ShowGameOverText(bGameEnded);
+			StartFinishLevelTimer(2.0f);
 		}
 	}
 }
@@ -288,4 +289,14 @@ void AVisualStudioTestCharacter::PickUpActor()
 void AVisualStudioTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AVisualStudioTestCharacter::FinishLevel()
+{
+	UKismetSystemLibrary::QuitGame(GetWorld(), UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Type::Quit, false);
+}
+
+void AVisualStudioTestCharacter::StartFinishLevelTimer(float DelayInSeconds)
+{
+	GetWorld()->GetTimerManager().SetTimer(FinishLevelTimerHandle, this, &AVisualStudioTestCharacter::FinishLevel, DelayInSeconds, false);
 }

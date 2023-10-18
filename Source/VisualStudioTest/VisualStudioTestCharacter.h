@@ -124,5 +124,10 @@ public:
 	float MaxHealth = 100;
 
 	bool bGameEnded = false;
-};
 
+	FTimerHandle FinishLevelTimerHandle;
+
+	void FinishLevel();
+
+	void StartFinishLevelTimer(float DelayInSeconds);
+};
