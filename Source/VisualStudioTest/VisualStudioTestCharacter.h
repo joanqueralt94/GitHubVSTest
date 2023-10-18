@@ -93,12 +93,13 @@ public:
 	int m_GoalScore;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
-	TArray<AActor*> m_ActorsInInventory;
-
-	TArray<AActor*> m_ActorsDropped;
+	TArray<AInventoryActor*> m_ActorsInInventory;
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	int m_InventorySize = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	int m_CountInInventory = 0;
 
 	void SpawnObject();
 

@@ -81,12 +81,14 @@ void AVisualStudioTestCharacter::BeginPlay()
 
 		FActorSpawnParameters SpawnParams;
 		UClass* InventoryActorClass = AInventoryActor::StaticClass();
-		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(InventoryActorClass, Location, Rotation, SpawnParams);
+		AInventoryActor* SpawnedActorRef = GetWorld()->SpawnActor<AInventoryActor>(InventoryActorClass, Location, Rotation, SpawnParams);
 		SpawnedActorRef->SetActorHiddenInGame(true);
 		m_ActorsInInventory.Push(SpawnedActorRef);
+		SpawnedActorRef->SetIsInInventory(true);
+		m_CountInInventory++;
 	}
 
-	PlayerHUD->SetInventoryCountNumber(m_ActorsInInventory.Num());
+	PlayerHUD->SetInventoryCountNumber(m_CountInInventory);
 }
 
 void AVisualStudioTestCharacter::EndPlay(const EEndPlayReason::Type EEndPlayReason)
@@ -227,15 +229,21 @@ void AVisualStudioTestCharacter::DropActor()
 	}
 	else
 	{
-		AActor* TempInventoryActor = m_ActorsInInventory[0];
+		for (int i = 0; i < m_ActorsInInventory.Num(); i++)
+		{
+			if (m_ActorsInInventory[i]->GetIsInInventory())
+			{
+				FVector TempInvetoryLocation = GetActorLocation() + GetActorForwardVector() * m_SpawnDistance;
 
-		FVector TempInvetoryLocation = GetActorLocation() + GetActorForwardVector() * m_SpawnDistance;
-		TempInventoryActor->SetActorLocation(TempInvetoryLocation);
-		TempInventoryActor->SetActorHiddenInGame(false);
-		m_ActorsInInventory.RemoveAt(0);
-		m_ActorsDropped.Push(TempInventoryActor);
+				m_ActorsInInventory[i]->SetActorLocation(TempInvetoryLocation);
+				m_ActorsInInventory[i]->SetActorHiddenInGame(false);
+				m_ActorsInInventory[i]->SetIsInInventory(false);
+				m_CountInInventory--;
+				break;
+			}
+		}
 		
-		PlayerHUD->SetInventoryCountNumber(m_ActorsInInventory.Num());
+		PlayerHUD->SetInventoryCountNumber(m_CountInInventory);
 
 		Health = Health - 20;
 		PlayerHUD->SetHealth(Health, MaxHealth);
@@ -250,16 +258,22 @@ void AVisualStudioTestCharacter::DropActor()
 
 void AVisualStudioTestCharacter::PickUpActor()
 {
-	if (m_ActorsInInventory.Num() < m_InventorySize)
+	if (m_CountInInventory < m_InventorySize)
 	{
-		AActor* TempInventoryActor = m_ActorsDropped[0];
-		FVector Location = FVector::ZeroVector;
-		TempInventoryActor->SetActorLocation(Location);
-		TempInventoryActor->SetActorHiddenInGame(true);
-		m_ActorsDropped.RemoveAt(0);
-		m_ActorsInInventory.Push(TempInventoryActor);
-
-		PlayerHUD->SetInventoryCountNumber(m_ActorsInInventory.Num());
+		for (int i = 0; i < m_ActorsInInventory.Num(); i++)
+		{
+			if (!m_ActorsInInventory[i]->GetIsInInventory())
+			{
+				FVector Location = FVector::ZeroVector;
+				m_ActorsInInventory[i]->SetActorLocation(Location);
+				m_ActorsInInventory[i]->SetActorHiddenInGame(true);
+				m_ActorsInInventory[i]->SetIsInInventory(true);
+				m_CountInInventory++;
+				break;
+			}
+		}
+		
+		PlayerHUD->SetInventoryCountNumber(m_CountInInventory);
 
 		Health = Health + 20;
 		PlayerHUD->SetHealth(Health, MaxHealth);
