@@ -7,6 +7,7 @@
 #include "AttractionActorComponent.h"
 #include "VisualStudioTestCharacter.generated.h"
 
+class AInventoryActor;
 class UAttractionActorComponent;
 
 UCLASS(config=Game)

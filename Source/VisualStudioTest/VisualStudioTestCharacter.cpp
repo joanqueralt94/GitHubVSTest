@@ -230,11 +230,11 @@ void AVisualStudioTestCharacter::DropActor()
 		AActor* TempInventoryActor = m_ActorsInInventory[0];
 
 		FVector TempInvetoryLocation = GetActorLocation() + GetActorForwardVector() * m_SpawnDistance;
-
 		TempInventoryActor->SetActorLocation(TempInvetoryLocation);
 		TempInventoryActor->SetActorHiddenInGame(false);
 		m_ActorsInInventory.RemoveAt(0);
 		m_ActorsDropped.Push(TempInventoryActor);
+		
 		PlayerHUD->SetInventoryCountNumber(m_ActorsInInventory.Num());
 
 		Health = Health - 20;
@@ -260,7 +260,6 @@ void AVisualStudioTestCharacter::PickUpActor()
 		m_ActorsInInventory.Push(TempInventoryActor);
 
 		PlayerHUD->SetInventoryCountNumber(m_ActorsInInventory.Num());
-
 
 		Health = Health + 20;
 		PlayerHUD->SetHealth(Health, MaxHealth);

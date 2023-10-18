@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "VisualStudioTestCharacter.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "InventoryActor.generated.h"
+
 
 UCLASS()
 class VISUALSTUDIOTEST_API AInventoryActor : public AActor
@@ -33,8 +33,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
 	UStaticMesh* m_MyStaticMesh;
 
-	AVisualStudioTestCharacter* ThirdPersonCharacter;
-
 	UFUNCTION()
 	void OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
+private:
+	bool bIsInInventory = false;
+
+public:
+	bool GetIsInInventory() { return bIsInInventory; }
+	void SetIsInInventory(bool bValue) { bIsInInventory = bValue; }
+
 };

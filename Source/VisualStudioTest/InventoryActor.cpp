@@ -35,11 +35,7 @@ AInventoryActor::AInventoryActor()
 // Called when the game starts or when spawned
 void AInventoryActor::BeginPlay()
 {
-	Super::BeginPlay();
-
-	ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-	
+	Super::BeginPlay();	
 }
 
 // Called every frame
@@ -50,9 +46,9 @@ void AInventoryActor::Tick(float DeltaTime)
 
 void AInventoryActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor == ThirdPersonCharacter)
+	/*if (OtherActor == ThirdPersonCharacter)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Collided With Player"));
-	}
+		UE_LOG(LogTemp, Warning, TEXT("Collided With Player"));
+	}*/
 }
 
