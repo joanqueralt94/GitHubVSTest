@@ -27,24 +27,26 @@ void UInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 
 	ThirdPersonCharacter = Cast<AVisualStudioTestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-
+	
 	if (PlayerHUDClass)
 	{
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+		check(PlayerController);
 		PlayerHUD = CreateWidget<UPlayerHUD>(PlayerController, PlayerHUDClass);
 		check(PlayerHUD);
 		PlayerHUD->AddToPlayerScreen();
 	}
 
+	m_ActorsInInventory.Reserve(m_InventorySize);
+	UClass* InventoryActorClass = AInventoryActor::StaticClass();
+	UWorld* World = GetWorld();
+	check(World);
+	const FVector Location = FVector::ZeroVector;
+	const FRotator Rotation = ThirdPersonCharacter->GetActorRotation();
+
 	for (int32 i = 0; i < m_InventorySize; i++)
 	{
-		FVector Location = FVector::ZeroVector;
-		FRotator Rotation = ThirdPersonCharacter->GetActorRotation();
-
-		FActorSpawnParameters SpawnParams;
-		UClass* InventoryActorClass = AInventoryActor::StaticClass();
-        IInventoryInterface* SpawnedActorRef = Cast<IInventoryInterface>(GetWorld()->SpawnActor(InventoryActorClass));
+        IInventoryInterface* SpawnedActorRef = Cast<IInventoryInterface>(World->SpawnActor(InventoryActorClass));
 		SpawnedActorRef->SetActorLocation(Location);
 		SpawnedActorRef->SetActorRotation(Rotation);
 		SpawnedActorRef->SetActorHiddenInGame(true);
@@ -120,8 +122,7 @@ void UInventoryComponent::PickUpActor()
 		{
 			if (!m_ActorsInInventory[i]->GetIsInInventory())
 			{
-				FVector Location = FVector::ZeroVector;
-				m_ActorsInInventory[i]->SetActorLocation(Location);
+				m_ActorsInInventory[i]->SetActorLocation(FVector::ZeroVector);
 				m_ActorsInInventory[i]->SetActorHiddenInGame(true);
 				m_ActorsInInventory[i]->SetIsInInventory(true);
 				m_CountInInventory++;
