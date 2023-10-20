@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
+class IInventoryInterface;
 class AInventoryActor;
 
 
@@ -31,8 +32,7 @@ public:
 
 	AVisualStudioTestCharacter* ThirdPersonCharacter;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
-	TArray<AInventoryActor*> m_ActorsInInventory;
+	TArray<IInventoryInterface*> m_ActorsInInventory;
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	int m_InventorySize = 0;

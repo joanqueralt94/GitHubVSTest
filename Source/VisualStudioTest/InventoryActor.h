@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "InventoryInterface.h"
 #include "InventoryActor.generated.h"
 
 
 UCLASS()
-class VISUALSTUDIOTEST_API AInventoryActor : public AActor
+class VISUALSTUDIOTEST_API AInventoryActor : public AActor, public IInventoryInterface
 {
 	GENERATED_BODY()
 	
@@ -40,6 +41,10 @@ private:
 	bool bIsInInventory = false;
 
 public:
-	bool GetIsInInventory() { return bIsInInventory; }
-	void SetIsInInventory(bool bValue) { bIsInInventory = bValue; }
+	bool GetIsInInventory() const override { return bIsInInventory; }
+	void SetIsInInventory(bool bValue) override { bIsInInventory = bValue; }
+
+	virtual void SetActorHiddenInGame(bool bValue) override;
+	virtual void SetActorLocation(const FVector& NewLocation, bool bSweep = false) override;
+	virtual void SetActorRotation(const FRotator& NewRotation, ETeleportType Teleport = ETeleportType::None) override;
 };

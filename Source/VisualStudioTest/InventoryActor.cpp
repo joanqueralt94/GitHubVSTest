@@ -48,3 +48,18 @@ void AInventoryActor::OnMeshActorHit(UPrimitiveComponent* HitComponent, AActor* 
 	
 }
 
+void AInventoryActor::SetActorHiddenInGame(bool bValue)
+{
+	Super::SetActorHiddenInGame(bValue);
+}
+
+void AInventoryActor::SetActorLocation(const FVector& NewLocation, bool bSweep)
+{
+	Super::SetActorLocation(NewLocation, bSweep);
+}
+
+void AInventoryActor::SetActorRotation(const FRotator& NewRotation, ETeleportType Teleport)
+{
+	Super::SetActorRotation(NewRotation, Teleport);
+}
+

@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerHUD.h"
 #include "InventoryActor.h"
+#include "InventoryInterface.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -43,7 +44,9 @@ void UInventoryComponent::BeginPlay()
 
 		FActorSpawnParameters SpawnParams;
 		UClass* InventoryActorClass = AInventoryActor::StaticClass();
-		AInventoryActor* SpawnedActorRef = GetWorld()->SpawnActor<AInventoryActor>(InventoryActorClass, Location, Rotation, SpawnParams);
+        IInventoryInterface* SpawnedActorRef = Cast<IInventoryInterface>(GetWorld()->SpawnActor(InventoryActorClass));
+		SpawnedActorRef->SetActorLocation(Location);
+		SpawnedActorRef->SetActorRotation(Rotation);
 		SpawnedActorRef->SetActorHiddenInGame(true);
 		m_ActorsInInventory.Push(SpawnedActorRef);
 		SpawnedActorRef->SetIsInInventory(true);
@@ -147,4 +150,3 @@ void UInventoryComponent::StartFinishLevelTimer(float DelayInSeconds)
 {
 	GetWorld()->GetTimerManager().SetTimer(FinishLevelTimerHandle, this, &UInventoryComponent::FinishLevel, DelayInSeconds, false);
 }
-
