@@ -13,6 +13,10 @@ AMeshActor::AMeshActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SetRemoteRoleForBackwardsCompat(ROLE_Authority);
+	bReplicates = true;
+
+
 	DefaultRootComponent= CreateDefaultSubobject<USceneComponent>("DefaultRootComponent");
 	RootComponent = DefaultRootComponent;
 
@@ -29,7 +33,7 @@ AMeshActor::AMeshActor()
 	
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AMeshActor::OnOverlapBegin);
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AMeshActor::OnOverlapEnd);
-
+	
 	AttractableActorComp = CreateDefaultSubobject<UAttractableActorComponent>(TEXT("AttractableActorComponent"));
 
 }

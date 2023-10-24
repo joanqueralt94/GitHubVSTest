@@ -10,6 +10,9 @@ AInventoryActor::AInventoryActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SetRemoteRoleForBackwardsCompat(ROLE_Authority);
+	bReplicates = true;
+
 	DefaultRootComponent = CreateDefaultSubobject<USceneComponent>("DefaultRootComponent");
 	RootComponent = DefaultRootComponent;
 

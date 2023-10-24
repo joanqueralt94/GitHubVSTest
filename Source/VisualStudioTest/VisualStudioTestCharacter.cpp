@@ -12,6 +12,8 @@
 #include "InventoryComponent.h"
 #include "AttractionActorComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Net/UnrealNetwork.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 // AVisualStudioTestCharacter
@@ -20,6 +22,8 @@ AVisualStudioTestCharacter::AVisualStudioTestCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+
+	SetReplicates(true);
 
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
@@ -58,6 +62,14 @@ void AVisualStudioTestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (HasAuthority())
+	{
+		m_GoalScore = 0;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You are just a client lol"));
+	}
 }
 
 void AVisualStudioTestCharacter::EndPlay(const EEndPlayReason::Type EEndPlayReason)
@@ -84,7 +96,6 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 	PlayerInputComponent->BindAction("Drop", IE_Pressed, InventoryComponent, &UInventoryComponent::DropActor);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, InventoryComponent, &UInventoryComponent::PickUpActor);
 
-
 	PlayerInputComponent->BindAxis("MoveForward", this, &AVisualStudioTestCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AVisualStudioTestCharacter::MoveRight);
 
@@ -102,6 +113,13 @@ void AVisualStudioTestCharacter::SetupPlayerInputComponent(class UInputComponent
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AVisualStudioTestCharacter::OnResetVR);
+}
+
+void AVisualStudioTestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AVisualStudioTestCharacter, m_GoalScore);
 }
 
 void AVisualStudioTestCharacter::OnResetVR()
@@ -182,6 +200,11 @@ void AVisualStudioTestCharacter::ShowScore()
 {
 	FString ScoreMessage = FString::Printf(TEXT("Score Player is %d"), m_GoalScore);
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, ScoreMessage);
+}
+
+void AVisualStudioTestCharacter::OnRep_Score()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Score: %d"), m_GoalScore);
 }
 
 void AVisualStudioTestCharacter::Tick(float DeltaTime)

@@ -75,6 +75,8 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -89,7 +91,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	int m_SpawnDistance = 0;
 
-	UPROPERTY(EditAnywhere, Category = "Game")
+	UPROPERTY(ReplicatedUsing=OnRep_Score)
 	int m_GoalScore;
 
 	virtual void Tick(float DeltaTime) override;
@@ -103,5 +105,8 @@ public:
 	void SpawnObject();
 
 	void ShowScore();
+
+	UFUNCTION()
+	void OnRep_Score();
 
 };
